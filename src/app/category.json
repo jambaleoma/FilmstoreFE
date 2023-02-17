@@ -1,0 +1,126 @@
+[{
+    "_id": "Animazione",
+    "label": "Animazione",
+    "value": "Animazione"
+  },
+  {
+    "_id": "Avventura",
+    "label": "Avventura",
+    "value": "Avventura"
+  },
+  {
+    "_id": "Azione",
+    "label": "Azione",
+    "value": "Azione"
+  },
+  {
+    "_id": "Biografico",
+    "label": "Biografico",
+    "value": "Biografico"
+  },
+  {
+   "_id": "Catastrofico",
+   "label": "Catastrofico",
+   "value": "Catastrofico"
+ },
+  {
+    "_id": "Commedia",
+    "label": "Commedia",
+    "value": "Commedia"
+  },
+  {
+    "_id": "Documentario",
+    "label": "Documentario",
+    "value": "Documentario"
+  },
+  {
+    "_id": "Drammatico",
+    "label": "Drammatico",
+    "value": "Drammatico"
+  },
+  {
+    "_id": "Epico",
+    "label": "Epico",
+    "value": "Epico"
+  },
+  {
+    "_id": "Erotico",
+    "label": "Erotico",
+    "value": "Erotico"
+  },
+  {
+    "_id": "Fantascienza",
+    "label": "Fantascienza",
+    "value": "Fantascienza"
+  },
+  {
+    "_id": "Fantasy",
+    "label": "Fantasy",
+    "value": "Fantasy"
+  },
+  {
+    "_id": "Gangster",
+    "label": "Gangster",
+    "value": "Gangster"
+  },
+  {
+    "_id": "Giallo",
+    "label": "Giallo",
+    "value": "Giallo"
+  },
+  {
+    "_id": "Guerra",
+    "label": "Guerra",
+    "value": "Guerra"
+  },
+  {
+    "_id": "Horror",
+    "label": "Horror",
+    "value": "Horror"
+  },
+  {
+    "_id": "Musical",
+    "label": "Musical",
+    "value": "Musical"
+  },
+  {
+    "_id": "Poliziesco",
+    "label": "Poliziesco",
+    "value": "Poliziesco"
+  },
+  {
+    "_id": "Satirico",
+    "label": "Satirico",
+    "value": "Satirico"
+  },
+  {
+    "_id": "Sentimentale",
+    "label": "Sentimentale",
+    "value": "Sentimentale"
+  },
+  {
+    "_id": "Spionaggio",
+    "label": "Spionaggio",
+    "value": "Spionaggio"
+  },
+  {
+    "_id": "Sportivo",
+    "label": "Sportivo",
+    "value": "Sportivo"
+  },
+  {
+    "_id": "Storico",
+    "label": "Storico",
+    "value": "Storico"
+  },
+  {
+    "_id": "Thriller",
+    "label": "Thriller",
+    "value": "Thriller"
+  },
+  {
+    "_id": "Western",
+    "label": "Western",
+    "value": "Western"
+  }
+]
