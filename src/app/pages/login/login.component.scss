@@ -5,6 +5,11 @@ input[type=submit]:disabled {
   border: 2px solid #455755 !important;
 }
 
+input[type=button]:hover:disabled, input[type=submit]:hover:disabled, input[type=reset]:hover:disabled  {
+  background-color: #455755;
+  border: 2px solid #455755 !important;
+}
+
 a {
   color: #92badd;
   display:inline-block;

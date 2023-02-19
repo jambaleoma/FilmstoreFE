@@ -22,6 +22,8 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
 
+  minLengthPass: number = 3;
+
   constructor(
     private router: Router,
     private customerService: CustomerService,
@@ -35,12 +37,10 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.loginForm = this.formBuilder.group({
       'username': new FormControl('', Validators.required),
-      'password': new FormControl('', Validators.compose([Validators.required, Validators.minLength(3)])),
+      'password': new FormControl('', Validators.compose([Validators.required, Validators.minLength(this.minLengthPass)])),
     });
-
   }
 
   loginCustomer(form: FormGroup) {

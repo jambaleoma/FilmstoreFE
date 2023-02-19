@@ -13,10 +13,15 @@
     <!-- Login Form -->
     <form [formGroup]="loginForm" #myform="ngForm" (ngSubmit)="loginCustomer(loginForm)">
       <input type="text" class="fadeIn second" formControlName="username" placeholder="Username">
+      <p-message severity="error" text="Nome Utente Obbligatorio"
+        *ngIf="!loginForm.controls['username'].valid && loginForm.controls['username'].dirty">
+      </p-message>
       <input type="password" class="fadeIn third" formControlName="password" placeholder="Password">
-      <p-message *ngIf="!loginForm.controls['password'].valid && loginForm.controls['password'].touched"
-        severity="error" [text]="loginForm.controls['password'].errors['required'] ?
-        'Password Obbligatioria' : loginForm.controls['password'].errors['minlength'] ? 'La Password deve contenere almeno 6 Caratteri' : ''">
+      <p-message *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['minlength']"
+        severity="error" text="La Password deve contenere almeno {{minLengthPass}} Caratteri">
+      </p-message>
+      <p-message *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['required']"
+        severity="error" text="Password Obbligatioria">
       </p-message>
       <input type="submit" class="fadeIn fourth" value="Accedi" [disabled]="!myform.valid">
     </form>
