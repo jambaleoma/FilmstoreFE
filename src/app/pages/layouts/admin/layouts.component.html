@@ -1,0 +1,23 @@
+<div class="p-grid p-grid-responsive">
+  <p-menubar *ngIf="loggedCustomer" [model]="items">
+    <ng-template pTemplate="start">
+      <img style="cursor: pointer;" (click)="goToHome()"
+        src="./../../../../assets/showcase/images/icon/video-player-icon-1.jpg" height="40" class="mr-2">
+    </ng-template>
+    <ng-template pTemplate="end">
+      <div *ngIf="loggedCustomer">
+        <p-splitButton (onClick)="openUserProfile()" class="padLef2em" label="Normal" styleClass="bg-primary"
+          [model]="itemsProfile">
+          <ng-template pTemplate="content">
+            <img class="cerchio" *ngIf="loggedCustomer.avatar" [src]="loggedCustomer.avatarBase64">
+            <img class="cerchio" *ngIf="!loggedCustomer.avatar" src="assets/showcase/images/customer/user-image.png">
+            <span class="ml-2 flex align-items-center font-bold">
+              {{loggedCustomer.firstName}} {{loggedCustomer.lastName}}
+            </span>
+          </ng-template>
+        </p-splitButton>
+      </div>
+    </ng-template>
+  </p-menubar>
+  <router-outlet></router-outlet>
+</div>

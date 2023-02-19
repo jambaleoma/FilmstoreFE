@@ -1,22 +1,22 @@
-import { CustomerRegistrationComponent } from './customer-registration/customer-registration.component';
-import { CustomerProfileComponent } from './customer-profile/customer-profile.component';
-import { CustomerSettingComponent } from './customer-setting/customer-setting.component';
-import { DettaglioSerieTvComponent } from './dettaglio-serie-tv/dettaglio-serie-tv.component';
-import { GestioneSerieTvComponent } from './gestione-serie-tv/gestione-serie-tv.component';
-import { GestioneFilmComponent } from './gestione-film/gestione-film.component';
-import { StatisticheComponent } from './statistiche/statistiche.component';
-import { RicercaSerieTvComponent } from './ricerca-serie-tv/ricerca-serie-tv.component';
-import { LoginComponent } from './login/login.component';
-import { RichiesteListComponent } from './richieste-list/richieste-list.component';
-import { CustomersListaComponent } from './customers-lista/customers-lista.component';
-import { DettaglioFilmComponent } from './dettaglio-film/dettaglio-film.component';
+import { CustomerProfileComponent } from './pages/customer-profile/customer-profile.component';
 import { Routes, RouterModule } from '@angular/router';
-import { RicercaFilmComponent } from './ricerca-film/ricerca-film.component';
-import { HomeComponent } from './home/home.component';
-import { LayoutsComponent } from './layouts/admin/layouts.component';
-import { RichiesteUtenteComponent } from './richieste-utente/richieste-utente.component';
-import { AuthGuard } from './guards/auth-guard.service';
-import { RoleGuard } from './guards/role-guard.service';
+import { LayoutsComponent } from './pages/layouts/admin/layouts.component';
+import { AuthGuard } from './core/guards/auth-guard.service';
+import { RoleGuard } from './core/guards/role-guard.service';
+import { CustomerRegistrationComponent } from './pages/customer-registration/customer-registration.component';
+import { CustomerSettingComponent } from './pages/customer-setting/customer-setting.component';
+import { CustomersListaComponent } from './pages/customers-lista/customers-lista.component';
+import { DettaglioFilmComponent } from './pages/dettaglio-film/dettaglio-film.component';
+import { DettaglioSerieTvComponent } from './pages/dettaglio-serie-tv/dettaglio-serie-tv.component';
+import { GestioneFilmComponent } from './pages/gestione-film/gestione-film.component';
+import { GestioneSerieTvComponent } from './pages/gestione-serie-tv/gestione-serie-tv.component';
+import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RicercaFilmComponent } from './pages/ricerca-film/ricerca-film.component';
+import { RicercaSerieTvComponent } from './pages/ricerca-serie-tv/ricerca-serie-tv.component';
+import { RichiesteListComponent } from './pages/richieste-list/richieste-list.component';
+import { RichiesteUtenteComponent } from './pages/richieste-utente/richieste-utente.component';
+import { StatisticheComponent } from './pages/statistiche/statistiche.component';
 
 const appRoutes: Routes = [
     /** Login */

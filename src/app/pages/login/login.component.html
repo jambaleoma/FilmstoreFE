@@ -1,0 +1,30 @@
+<p-toast [style]="{marginTop: '80px'}" styleClass="error-toast" key="KO"></p-toast>
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+    <h2 class="active"> Accedi </h2>
+    <h2 class="inactive underlineHover" (click)="goToRegistration()"> Registrati </h2>
+
+    <!-- Icon -->
+    <div class="fadeIn first">
+      <img src="./../../../assets/showcase/images/coverLogin/defaultUserAvatar.png" id="icon" alt="User Icon" style="width: 200px;"/>
+    </div>
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" #myform="ngForm" (ngSubmit)="loginCustomer(loginForm)">
+      <input type="text" class="fadeIn second" formControlName="username" placeholder="Username">
+      <input type="password" class="fadeIn third" formControlName="password" placeholder="Password">
+      <p-message *ngIf="!loginForm.controls['password'].valid && loginForm.controls['password'].touched"
+        severity="error" [text]="loginForm.controls['password'].errors['required'] ?
+        'Password Obbligatioria' : loginForm.controls['password'].errors['minlength'] ? 'La Password deve contenere almeno 6 Caratteri' : ''">
+      </p-message>
+      <input type="submit" class="fadeIn fourth" value="Accedi" [disabled]="!myform.valid">
+    </form>
+
+    <!-- Remind Passowrd -->
+    <div id="formFooter">
+      <a class="underlineHover" (click)="goToHelp()">Password dimenticata?</a>
+    </div>
+
+  </div>
+</div>

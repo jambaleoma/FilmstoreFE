@@ -1,0 +1,96 @@
+<div style="text-align:center">
+  <h1 *ngIf="showSerieDetails">
+    {{serie.nome}}
+  </h1>
+</div>
+
+<p-dataView #dv [value]="stagioni" [rows]="20">
+  <ng-template let-stagione pTemplate="listItem">
+    <div class="p-g" [ngClass]="{'separation': stagioni[1] }" style="padding: 2em;">
+      <div class="p-g-12 p-md-3" style="text-align:center">
+        <img [src]="stagione.locandina" style="width: 70%">
+      </div>
+      <div class="p-g-12 p-md-8">
+        <div class="p-g">
+          <div class="p-g-12" style="text-align: center">
+            <h1>{{stagione.numeroStagione}}° Stagione</h1>
+          </div>
+
+          <div class="p-g-2 p-sm-6">Anno: </div>
+          <div class="p-g-10 p-sm-6"><b>{{stagione.anno}}</b></div>
+
+          <div class="p-g-2 p-sm-6">Formato: </div>
+          <div class="p-g-10 p-sm-6"><b>{{stagione.formato}}</b></div>
+
+          <div class="p-g-2 p-sm-6">N. Episodi: </div>
+          <div class="p-g-10 p-sm-6"><b>{{stagione.numeroEpisodi}}</b></div>
+
+          <div class="p-g-2 p-sm-6">Lingua Audio: </div>
+          <div class="p-g-10 p-sm-6">
+            <img *ngFor="let lingua of stagione.linguaAudio" src="assets/showcase/images/flags/{{lingua}}.png" title="{{lingua}}">
+          </div>
+
+          <div class="p-g-2 p-sm-6">Lingua Sottotitoli: </div>
+          <div class="p-g-10 p-sm-6">
+            <img *ngFor="let linguaSub of stagione.linguaSottotitoli" src="assets/showcase/images/flags/{{linguaSub}}.png"
+              title="{{linguaSub}}">
+            <span *ngIf="!stagione.linguaSottotitoli"> - </span>
+          </div>
+
+          <div class="p-g-2 p-sm-6"></div>
+          <div class="p-g-10 p-sm-6"><b></b></div>
+
+          <div class="p-g-12 p-sm-12">Trama: </div>
+          <div class="p-g-12 p-sm-12">{{stagione.trama}}</div>
+
+        </div>
+      </div>
+      <div class="p-g-12 p-md-1 search-icon" style="text-align: center; padding-top: 3%">
+        <button pButton type="button" icon="pi pi-search" (click)="selectSerie($event, stagione)"></button>
+      </div>
+    </div>
+  </ng-template>
+</p-dataView>
+
+<p-dialog header="Dettagli Serie TV" [(visible)]="displayDialog" [responsive]="true" [modal]="true" [positionTop]="50" [contentStyle]="{'max-height':'75vh'}" [closeOnEscape]="true" [resizable]="false">
+  <div class="p-g" *ngIf="selectedStagione">
+    <div class="p-g-12" style="text-align: center">
+      <div class="p-g-4">Titolo: </div>
+      <div class="p-g-8"><b>{{serie.nome}}</b></div>
+
+      <div class="p-g-4">Stagione: </div>
+      <div class="p-g-8"><b>{{selectedStagione.numeroStagione}}</b></div>
+
+      <div class="p-g-4">Anno: </div>
+      <div class="p-g-8"><b>{{selectedStagione.anno}}</b></div>
+    </div>
+    <div class="p-g-4">
+      <img [src]="selectedStagione.locandina" style="width: 100%">
+    </div>
+    <div class="p-g-8" style="padding-left: 15%; padding-right: 15%">
+      <p-table film-table [value]="selectedStagione.episodi" #ft>
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th style="width: 19%">
+              N°
+            </th>
+            <th>
+              Nome Episodio
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData>
+          <tr>
+            <td style="height: 15px;">
+              {{selectedStagione.episodi.indexOf(rowData) + 1}}
+            </td>
+            <td style="height: 15px;">
+              {{rowData}}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+  </div>
+</p-dialog>

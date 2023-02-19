@@ -1,9 +1,11 @@
-import { ApplicationService } from './_service/application.service';
+import { ApplicationService } from './core/_service/application.service';
 import { Component, OnInit } from '@angular/core';
-import { ListItem } from './_api/models';
+import { ListItem } from './core/_api/models';
+import { TranslateService } from '@ngx-translate/core';
+import { PrimeNGConfig } from 'primeng/api';
 
-const audioFileJson: ListItem[] = require('./audio&subtitle.json');
-const categoryFileJson: ListItem[] = require('./category.json');
+const audioFileJson: ListItem[] = require('./../assets/JSON/audio&subtitle.json');
+const categoryFileJson: ListItem[] = require('./../assets/JSON/category.json');
 
 @Component({
   selector: 'app-root',
@@ -12,7 +14,15 @@ const categoryFileJson: ListItem[] = require('./category.json');
 })
 export class AppComponent implements OnInit {
 
-  constructor(private applicationService: ApplicationService) {
+  constructor(
+    private applicationService: ApplicationService,
+    private config: PrimeNGConfig,
+    private translateService: TranslateService) {
+    this.translateService.setDefaultLang('it');
+    this.translateService.use('it');
+    this.translateService.get('primeng').subscribe(
+      res => this.config.setTranslation(res)
+    );
   }
 
   ngOnInit() {

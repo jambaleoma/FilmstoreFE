@@ -1,0 +1,191 @@
+<p-toast [style]="{marginTop: '80px'}" styleClass="error-toast" key="homeTost"></p-toast>
+
+<div class="p-col-12" style="padding-bottom: 3em;">
+      <div *ngIf="loggedCustomer" style="height: 30em;">
+        <h1 style="text-align: center">HOME</h1>
+
+        <div class="grid">
+          <div class="col" style="padding-top: 2em; padding-left: 5%; padding-right: 5%; text-align: center;">
+            <app-home-film-card
+            header="Ricerca Serie TV"
+            subheader="Trova la Serie che ami!"
+            imgPath="assets\showcase\images\HomePage\Card\CardRicercaSerieTV.jpg"
+            body="Qui troverai un elenco di moltissime serie TV, dove potrai ricercare le tue preferite e avere tutte le informazioni che cerchi."
+            [isAdmin]="loggedCustomer.admin"
+            leftButtonClick="filmStore/gestioneSerieTV"
+            rightButtonClick="filmStore/ricercaSerieTV"
+            leftButtonLabel="Gestisci Serie TV"
+            rightButtonLabel="Cerca Serie TV"
+            [leftButtonIcon]="faCog"
+            [rightButtonIcon]="faVideo"></app-home-film-card>
+          </div>
+          <div class="col" style="padding-top: 2em; padding-left: 5%; padding-right: 5%; text-align: center;">
+            <app-home-film-card
+            header="Ricerca Film"
+            subheader="Trova il Film che ti piace!"
+            imgPath="assets\showcase\images\HomePage\Card\CardRicercaFilm.jpg"
+            body="Qui troverai un elenco di moltissimi film, dove potrai ricercare i tuoi preferiti e avere tutte le informazioni che cerchi."
+            [isAdmin]="loggedCustomer.admin"
+            leftButtonClick="filmStore/gestioneFilm"
+            rightButtonClick="filmStore/ricercaFilm"
+            leftButtonLabel="Gestisci Film"
+            rightButtonLabel="Cerca Film"
+            [leftButtonIcon]="faCog"
+            [rightButtonIcon]="faFilm"></app-home-film-card>
+          </div>
+          <div class="col" style="padding-top: 2em; padding-left: 5%; padding-right: 5%; text-align: center;">
+            <app-home-film-card
+            header="Fai una Richiesta"
+            subheader="Chiedi di aggiungere un Titolo!"
+            imgPath="assets\showcase\images\HomePage\Card\CardRichieste.jpg"
+            body="Qui potrai chiedere tu stesso un film o una Serie TV che non sono presenti in lista."
+            [isAdmin]="loggedCustomer.admin"
+            leftButtonClick="filmStore/richieste"
+            [rightButtonClick]="loggedCustomer.admin ? 'filmStore/utenti' : 'filmStore/richieste/view'"
+            leftButtonLabel="Gestisci Richieste"
+            [rightButtonLabel]="loggedCustomer.admin ? 'Cerca Utenti' : 'Fai una Richiesta'"
+            [leftButtonIcon]="faCog"
+            [rightButtonIcon]="loggedCustomer.admin ? faUsers : faPlus"></app-home-film-card>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="newFilms" style="text-align: center; padding-top: 4em;">
+        <h1>Film Aggiunti di Recente</h1>
+        <p-carousel [value]="newFilms" [autoplayInterval]="5000">
+          <ng-template let-film pTemplate="item">
+            <div class="p-grid p-grid-responsive" style="height: 31em; padding-top: 2em;">
+              <div class="p-grid-row">
+                <div class="p-grid-col-12"><img [src]="film.locandina"
+                    style="height: 20em;"></div>
+              </div>
+              <div class="p-grid-row" style="padding-top: 2em">
+                <div class="p-grid-col-12"><b>{{film.nome}}</b></div>
+              </div>
+              <div class="p-grid-row" style="padding-top: 2em">
+                <div class="p-grid-col-12">
+                  <button type="button" title="Visualizza Dettagli" pButton icon="pi pi-search" (click)="showDetailsFilm(film._id || film.id)"></button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </p-carousel>
+      </div>
+
+      <div *ngIf="newSerie" style="text-align: center; padding-top: 4em;">
+        <h1>Nuove Serie TV</h1>
+        <p-carousel [value]="newSerie" [autoplayInterval]="5000">
+          <ng-template let-serie pTemplate="item">
+            <div class="p-grid p-grid-responsive" style="height: 25em; padding-top: 2em;">
+              <div class="p-grid-row">
+                <div class="p-grid-col-12"><img [src]="serie.locandina"
+                  style="height: 14em; max-width: 24em;"></div>
+              </div>
+              <div class="p-grid-row" style="padding-top: 2em">
+                <div class="p-grid-col-12"><b>{{serie.nome}} {{serie.stagioni[(serie.stagioni.length - 1)].numeroStagione}}° Stagione</b></div>
+              </div>
+              <div class="p-grid-row" style="padding-top: 2em">
+                <div class="p-grid-col-12">
+                  <button type="button" title="Visualizza Dettagli" pButton icon="pi pi-search" (click)="showDetailsSerie(serie.serie_id || serie._id)"></button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </p-carousel>
+      </div>
+
+      <div *ngIf="categoriaPreferita" style="padding-top: 4em;">
+        <h1 style="text-align: center">Film Consigliati</h1>
+        <p-carousel [value]="recommendedFilms" headerFacet="'Categoria: ' + categoriaPreferita" [autoplayInterval]="5000">
+          <ng-template let-film pTemplate="item">
+            <div class="p-grid p-grid-responsive" style="height: 31em; padding-top: 2em; text-align: center">
+              <div class="p-grid-row">
+                <div class="p-grid-col-12"><img [src]="film.locandina"
+                    style="height: 20em;"></div>
+              </div>
+              <div class="p-grid-row" style="padding-top: 2em">
+                <div class="p-grid-col-12"><b>{{film.nome}}</b></div>
+              </div>
+              <div class="p-grid-row" style="padding-top: 2em">
+                <div class="p-grid-col-12">
+                  <button type="button" title="Visualizza Dettagli" pButton icon="pi pi-search" (click)="showDetailsFilm(film._id || film.id)"></button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </p-carousel>
+      </div>
+      <div *ngIf="!categoriaPreferita">
+        <div style="padding-top: 4em; text-align: center; padding-left: 25%; padding-right: 25%;">
+          <p-card header="Quali sono le tue Categorie preferite?" subheader="Inserisci le tue Categorie" styleClass="p-card-shadow">
+            <p-header>
+              <img src="Card" src="../../assets/showcase/images/HomePage/Card/Preferiti.jpg">
+            </p-header>
+            <div>Qui potrai scegliere le tue categorie di Film preferite, per essere sempre aggiornato sulle nuove
+              uscite che più ti piacciono.</div>
+            <p-footer>
+              <button pButton type="button" label="Aggiungi Categorie Preferite" icon="fas fa-star" (click)="goToPersonalPrifile()"></button>
+            </p-footer>
+          </p-card>
+        </div>
+      </div>
+</div>
+
+<div class="p-grid-col-12" *ngIf="loadFooter">
+  <div class="p-g">
+    <div class="p-g-12" style="padding: 0px; margin-bottom: -10px;">
+      <img src="../../assets/showcase/images/HomePage/Footer/photo_dx.png" style="width: 100%; height: 15em;">
+    </div>
+    <div class="grid" style="height: 9em; padding: 0px;">
+      <div class="col-2"></div>
+      <div class="col" style="text-align: left">
+        <ul style="list-style-type: none;">
+          <li>
+            FilmStore
+          </li>
+          <li>
+            Archivio Film & Serie TV
+          </li>
+          <li>
+            Italia
+          </li>
+          <li>
+            00143 - Roma
+          </li>
+          <li>
+            Tel. +39 0697458422
+          </li>
+          <li>
+            email: <a href="mailto:vincenzodamico93@gmail.com">vincenzodamico93@gmail.com</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col" style="text-align: center;">
+        <img src="../../assets/showcase/images/icon/video-player-icon-1.jpg" style="margin-top: 5px; width: 100px;">
+      </div>
+      <div class="col" style="text-align: right">
+        <ul style="list-style-type: none;">
+          <li>
+            FilmStore
+          </li>
+          <li>
+            Archivio Film & Serie TV
+          </li>
+          <li>
+            Italia
+          </li>
+          <li>
+            00143 - Roma
+          </li>
+          <li>
+            Tel. +39 0697458422
+          </li>
+          <li>
+            email: <a href="mailto:vincenzodamico93@gmail.com">vincenzodamico93@gmail.com</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-2"></div>
+    </div>
+  </div>
+</div>
