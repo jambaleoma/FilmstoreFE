@@ -5,6 +5,7 @@ import { Table } from 'primeng/table';
 import { Richiesta, Customer } from 'src/app/core/_api/models';
 import { CustomerService } from 'src/app/core/_api/services/customer.service';
 import { RichiestaService } from 'src/app/core/_api/services/richiesta.service';
+import { faCheck, faPlus, faTimes, faTrash, faUpload, faWrench } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-richieste-list',
@@ -42,6 +43,13 @@ export class RichiesteListComponent implements OnInit {
   loggedCustomer: Customer;
 
   percenutaleAvanzamento: number;
+
+  faPlus = faPlus;
+  faCheck = faCheck;
+  faTimes = faTimes;
+  faWrench = faWrench;
+  faTrash = faTrash;
+  faUpload = faUpload;
 
   @ViewChild('rt') rt: Table;
 
@@ -297,5 +305,9 @@ export class RichiesteListComponent implements OnInit {
         });
       }
     });
+  }
+
+  applyFilter(table, event: Event, col, filterMethod) {
+    table.filter((event.target as HTMLInputElement).value, col, filterMethod )
   }
 }

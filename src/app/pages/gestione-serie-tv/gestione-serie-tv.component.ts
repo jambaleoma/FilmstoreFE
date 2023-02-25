@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, Renderer2 } from '@angular/core';
+import { faCheck, faPlus, faTrash, faTrashRestore, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { SelectItem, Message, ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Serie, ListItem } from 'src/app/core/_api/models';
@@ -55,6 +56,11 @@ export class GestioneSerieTvComponent implements OnInit {
   postPath: string;
 
   postPathSerie: string;
+
+  faPlus = faPlus
+  faTresh = faTrash
+  faCheck = faCheck
+  faUpload = faUpload
 
   @ViewChild('rt') rt: Table;
 
@@ -119,7 +125,7 @@ export class GestioneSerieTvComponent implements OnInit {
       this.stagioni = notification;
     });
     this.displayDialogSerie = true;
-    this.postPathSerie = 'http://localhost:8080/rest/serie/locandina/saveLocandinaImage/' + this.serieSelezionata.serie_id;
+    this.postPathSerie = 'http://localhost:8080/rest/serie/locandina/saveLocandinaImage/' + this.serieSelezionata._id;
     setTimeout(() => {
       this.renderer.selectRootElement('#titolo').focus();
     }, 100);
@@ -310,9 +316,9 @@ export class GestioneSerieTvComponent implements OnInit {
       header: 'Eliminazione Serie TV',
       icon: 'fa fa-trash',
       accept: () => {
-        this.stagioneService.deleteStagioniBySerieId(this.serieSelezionata.serie_id).subscribe(responseStagione => {
+        this.stagioneService.deleteStagioniBySerieId(this.serieSelezionata._id).subscribe(responseStagione => {
           if (responseStagione !== null) {
-            this.serieService.deleteSerie(this.serieSelezionata.serie_id).subscribe(response => {
+            this.serieService.deleteSerie(this.serieSelezionata._id).subscribe(response => {
               if (response !== null) {
                 const index = this.series.indexOf(this.serieSelezionata);
                 this.series = this.series.filter((val, i) => i !== index);
@@ -415,6 +421,10 @@ export class GestioneSerieTvComponent implements OnInit {
   reset(stvt: Table) {
     stvt.reset();
     this.filters = {};
+  }
+
+  applyFilter(table, event: Event, col, filterMethod) {
+    table.filter((event.target as HTMLInputElement).value, col, filterMethod )
   }
 
 }

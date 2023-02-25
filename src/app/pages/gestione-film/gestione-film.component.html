@@ -6,46 +6,46 @@
 </p-blockUI>
 
 
-<div class="p-grid-col-12">
-  <div class="p-g">
-    <div class="p-g-2"></div>
-    <div class="p-g-8" style="text-align: center">
-      <h1>Gestione Film</h1>
-    </div>
-    <div class="p-g-2">
-      <button type="button" pButton icon="fa fa-plus" (click)="showDialogToAdd()" label="Aggiungi Film"
-        style="margin-top: 1em;"></button>
-    </div>
+<div class="grid">
+  <div class="col-2"></div>
+  <div class="col-8" style="text-align: center">
+    <h1>Gestione Film</h1>
+  </div>
+  <div class="col-2" style="margin-top: 1em;">
+    <button pButton type="button" class="p-button-info" (click)="showDialogToAdd()" style="justify-content: center">
+      Aggiungi Film <fa-icon class="m-1" [icon]="faPlus"></fa-icon> </button>
   </div>
 </div>
 
 <!-- FILTRI DI RICERCA -->
-<div class="p-grid-col-12">
-  <div class="p-g">
-    <div class="p-g-2 p-g-offset-1">
-      <div class="label"> Nome Film </div>
-      <input film-input type="text" pInputText placeholder=" &#xF002; Nome" [(ngModel)]="filters.titleFilm"
-        (input)="rt.filter($event.returnValue, 'nome', 'contains')">
-    </div>
-    <div class="p-g-2 p-g-offset-2">
-      <div class="label">Formato Film </div>
-      <p-multiSelect [filter]="false" [showToggleAll]="false" [showHeader]="false" [options]="formatiFilter"
-        [(ngModel)]="filters.format" (onChange)="rt.filter($event.value, 'formato', 'in')">
-        <ng-template let-value pTemplate="selectedItems">
-          <div *ngFor="let val of value" class="p-multiselected-item-token p-corner-all">
-            <span>{{val}}</span>
-          </div>
-          <span *ngIf="!value || value.length === 0" class="p-multiselected-empty-token p-corner-all"><i
-              class="fa fa-search" aria-hidden="true" style="margin-right: 5px"></i>Formato</span>
-        </ng-template>
-      </p-multiSelect>
-    </div>
-    <div film-button-third class="p-g-3 p-g-offset-2 resetButton" style="padding-right: 5%;">
-      <button pButton type="button" label="Reset Filtri" (click)="reset(rt)" style="margin-top: 14px;"></button>
-    </div>
+<div class="grid">
+  <div class="col-3 col-offset-1">
+    <div class="label"> Nome Film </div>
+    <span class="p-input-icon-left">
+      <i class="pi pi-search"></i>
+      <input film-input type="text" pInputText placeholder="Cerca mome" [(ngModel)]="filters.titleFilm"
+        (input)="applyFilter(rt, $event, 'nome', 'contains')">
+    </span>
+  </div>
+  <div class="col-3 col-offset-1">
+    <div class="label">Formato Film </div>
+    <p-multiSelect [filter]="false" [showToggleAll]="false" [showHeader]="false" [options]="formatiFilter"
+      [(ngModel)]="filters.format" (onChange)="rt.filter($event.value, 'formato', 'in')" class="multiselect-custom">
+      <ng-template let-value pTemplate="selectedItems">
+        <div *ngFor="let val of value" class="format-placeholder">
+          <span>{{val}}</span>
+        </div>
+        <span *ngIf="!value || value.length === 0" class="format-placeholder"><i class="fa fa-search" aria-hidden="true"
+            style="margin-right: 5px"></i>Formato</span>
+      </ng-template>
+    </p-multiSelect>
+  </div>
+  <div film-button-third class="col-3 col-offset-1 resetButton" style="padding-right: 5%;">
+    <button pButton type="button" label="Reset Filtri" (click)="reset(rt)" style="margin-top: 14px;"></button>
   </div>
 </div>
 
+<!-- TABELLA DEI FILM -->
 <div class="p-grid-col-12" style="padding-top: 2em; padding-left: 5%; padding-right: 5%">
   <p-table setting-table [columns]="cols" #rt [value]="films" selectionMode="single" [(selection)]="filmSelezionato"
     (onRowSelect)="onRowSelect($event)" [rows]="50">
@@ -78,48 +78,42 @@
 </div>
 
 <p-dialog header="Dettaglio Film" [(visible)]="displayDialog" [closable]="true" [responsive]="true" [modal]="true"
-  [positionTop]="50">
+  [positionTop]="50" [style]="{width: '50vw'}">
   <form name="form" #fFilm="ngForm">
-    <div class="p-g p-fluid" *ngIf="film" style="padding-bottom: 2em">
-      <div class="p-g-12">
-        <div class="p-g-3">
+    <div class="col p-fluid" *ngIf="film" style="padding-bottom: 2em">
+      <div class="grid">
+        <div class="col-2" style="margin-top: 12px;">
           <label>Titolo Film:</label>
         </div>
-        <div class="p-g-9">
+        <div class="col-10">
           <input pInputText id="titolo" name="titolo" [(ngModel)]="film.nome" style="width: 100%" />
         </div>
-      </div>
-      <div class="p-g-12">
-        <div class="p-g-3">
+        <div class="col-2" style="margin-top: 12px;">
           <label>Formato Film:</label>
         </div>
-        <div class="p-g-3" *ngIf="newFilm">
+        <div class="col-4" *ngIf="newFilm">
           <p-dropdown [options]="formats" id="formato" name="formato" [(ngModel)]="film.formato"></p-dropdown>
         </div>
-        <div class="p-g-3" *ngIf="!newFilm">
+        <div class="col-4" *ngIf="!newFilm">
           <p-dropdown [options]="formatDialog" id="formato" name="formato" [(ngModel)]="film.formato"></p-dropdown>
         </div>
-        <div class="p-g-3" style="text-align: center">
+        <div class="col-2" style="text-align: center; margin-top: 12px;">
           <label>Anno Film:</label>
         </div>
-        <div class="p-g-3">
+        <div class="col-4">
           <p-inputMask id="anno" name="anno" mask="9999" [(ngModel)]="film.anno" slotChar="AAAA"></p-inputMask>
         </div>
-      </div>
-      <div class="p-g-12">
-        <div class="p-g-3">
+        <div class="col-2" style="margin-top: 12px;">
           <label>Categoria:</label>
         </div>
-        <div class="p-g-9">
+        <div class="col-10">
           <p-multiSelect name="categoria" [showToggleAll]="false" [options]="category" [filter]="false"
             [(ngModel)]="film.categoria" [panelStyle]="{minWidth:'12em'}" defaultLabel="-"></p-multiSelect>
         </div>
-      </div>
-      <div class="p-g-12">
-        <div class="p-g-3">
+        <div class="col-2" style="margin-top: 12px;">
           <label>Audio:</label>
         </div>
-        <div class="p-g-3">
+        <div class="col-4">
           <p-multiSelect name="audio" [options]="audios" [(ngModel)]="film.linguaAudio" [panelStyle]="{minWidth:'12em'}"
             defaultLabel="-">
             <ng-template let-audio pTemplate="selectedItems">
@@ -137,10 +131,10 @@
             </ng-template>
           </p-multiSelect>
         </div>
-        <div class="p-g-3" style="text-align: center">
+        <div class="col-2" style="text-align: center; margin-top: 12px;">
           <label>Sottotitoli:</label>
         </div>
-        <div class="p-g-3">
+        <div class="col-4">
           <p-multiSelect name="subtitle" [options]="audios" [(ngModel)]="film.linguaSottotitoli"
             [panelStyle]="{minWidth:'12em'}" defaultLabel="-">
             <ng-template let-audio pTemplate="selectedItems">
@@ -158,38 +152,37 @@
             </ng-template>
           </p-multiSelect>
         </div>
-      </div>
-      <div class="p-g-12">
-        <div class="p-g-3">
+        <div class="col-2" style="margin-top: 12px;">
           <label>Trama:</label>
         </div>
-        <div class="p-g-9">
-          <textarea rows="3" id="trama" name="trama" pInputTextarea [(ngModel)]="film.trama"></textarea>
+        <div class="col-10">
+          <textarea rows="3" id="trama" name="trama" pInputTextarea [(ngModel)]="film.trama" [autoResize]="true"></textarea>
         </div>
       </div>
-      <div *ngIf="!newFilm && !film.locandina" class="p-g-12" style="text-align: center">
+      <div *ngIf="!newFilm && !film.locandina" class="col-12" style="text-align: center">
         <p-fileUpload name="filmLocandina" [url]="postPath" (onUpload)="successfulUpload()" (onError)="errorUpload()"
           chooseLabel="Scegli Locandina" uploadLabel="Carica Locandina" cancelLabel="Cancella" accept="image/*">
         </p-fileUpload>
       </div>
-      <div *ngIf="!newFilm && film.locandina" class="p-g-6 p-g-offset-3" style="text-align: center">
-        <button type="button" pButton class="p-button-info" icon="fa fa-trash-o" (click)="deleteLocandina()"
-          label="Elimina Locandina"></button>
+      <div *ngIf="!newFilm && film.locandina" class="col-6 col-offset-3" style="text-align: center">
+        <button type="button" pButton class="p-button-warning" (click)="deleteLocandina()"
+          style="justify-content: center">
+          Elimina Locandina <fa-icon class="m-1" [icon]="faTresh"></fa-icon> </button>
       </div>
     </div>
     <p-footer>
-      <div class="p-dialog-buttonpane p-helper-clearfix" style="text-align: center">
-        <div class="p-g-6" *ngIf="!newFilm">
-          <button type="button" pButton class="p-button-danger" icon="fa fa-trash-o" (click)="delete()"
-            label="Elimina"></button>
+      <div class="grid p-dialog-buttonpane p-helper-clearfix" style="text-align: center">
+        <div class="col-6" *ngIf="!newFilm">
+          <button type="button" pButton class="p-button-danger" (click)="delete()" style="justify-content: center">
+            Elimina <fa-icon class="m-1" [icon]="faTresh"></fa-icon> </button>
         </div>
-        <div class="p-g-12" *ngIf="newFilm">
-          <button type="submit" pButton class="p-button-success" icon="fa fa-check" (click)="save()"
-            label="Salva"></button>
+        <div class="col-12" *ngIf="newFilm">
+          <button type="submit" pButton class="p-button-success" (click)="save()" style="justify-content: center">
+            Salva <fa-icon class="m-1" [icon]="faCheck"></fa-icon> </button>
         </div>
-        <div class="p-g-6" *ngIf="!newFilm">
-          <button type="submit" pButton class="p-button-success" icon="fa fa-upload" (click)="save()"
-            label="Aggiorna"></button>
+        <div class="col-6" *ngIf="!newFilm">
+          <button type="submit" pButton class="p-button-success" (click)="save()" style="justify-content: center">
+            Aggiorna <fa-icon class="m-1" [icon]="faUpload"></fa-icon> </button>
         </div>
       </div>
     </p-footer>
@@ -198,12 +191,13 @@
 
 <p-confirmDialog #cd>
   <p-footer>
-    <div class="p-dialog-buttonpane p-helper-clearfix">
-      <div class="p-g-3" style="text-align: right">
+    <div class="grid p-dialog-buttonpane p-helper-clearfix">
+      <div class="col-1"></div>
+      <div class="col-3" style="text-align: right">
         <button type="button" pButton icon="pi pi-times" label="No" (click)="cd.reject()"></button>
       </div>
-      <div class="p-g-6"></div>
-      <div class="p-g-3">
+      <div class="col-4"></div>
+      <div class="col-3">
         <button type="button" pButton icon="pi pi-check" label="Si" (click)="cd.accept()"></button>
       </div>
     </div>

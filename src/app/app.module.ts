@@ -52,6 +52,7 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CalendarModule } from 'primeng/calendar';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { LayoutsComponent } from './pages/layouts/admin/layouts.component';
 import { AuthGuard } from './core/guards/auth-guard.service';
 import { RoleGuard } from './core/guards/role-guard.service';
@@ -150,6 +151,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FontAwesomeModule,
     CalendarModule,
     RadioButtonModule,
+    InputNumberModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

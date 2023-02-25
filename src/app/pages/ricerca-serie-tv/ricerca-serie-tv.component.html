@@ -3,25 +3,32 @@
 </div>
 
 <!-- FILTRI DI RICERCA -->
-<div class="p-grid-col-12" style="padding-left: 5%; padding-right: 5%;">
-  <div class="p-g">
-    <div class="p-g-4" style="padding-left: 0px">
-      <div class="label"> Nome SerieTV </div>
-      <input film-input type="text" pInputText placeholder=" &#xF002; Nome" [(ngModel)]="filters.titleSerie" (input)="stvt.filter($event.returnValue, 'nome', 'contains')">
-    </div>
-    <div class="p-g-4">
-      <div class="label">N° Stagioni SerieTV</div>
-      <input film-input type="text" pInputText placeholder=" &#xF002; Stagioni" [(ngModel)]="filters.stagioni" (input)="stvt.filter($event.returnValue, 'stagioni.length', 'contains')">
-    </div>
-    <div film-button-third class="p-g-4 resetButton" style="text-align: right; padding-right: 0px;">
-      <button pButton type="button" label="Reset Filtri" (click)="reset(stvt)" style="margin-top: 14px; margin-left: 20%"></button>
-    </div>
+<div class="grid" style="padding-left: 5%; padding-right: 5%;">
+  <div class="col-4">
+    <div class="label"> Nome SerieTV </div>
+    <span class="p-input-icon-left">
+      <i class="pi pi-search"></i>
+      <input film-input type="text" pInputText placeholder="Cerca mome" [(ngModel)]="filters.titleSerie"
+        (input)="applyFilter(stvt, $event, 'nome', 'contains')">
+    </span>
+  </div>
+  <div class="col-4">
+    <div class="label">N° Stagioni SerieTV</div>
+    <span class="p-input-icon-left">
+      <i class="pi pi-search"></i>
+      <input film-input type="text" pInputText placeholder="Cerca Stagione" [(ngModel)]="filters.stagioni"
+        (input)="applyFilter(stvt, $event, 'stagioni.length', 'contains')">
+    </span>
+  </div>
+  <div class="col-4 film-button-third resetButton">
+    <button pButton type="button" label="Reset Filtri" (click)="reset(stvt)"
+      style="margin-top: 14px; margin-left: 20%"></button>
   </div>
 </div>
 
-<div class="p-grid-col-12" style="padding-left: 5%; padding-right: 5%; padding-top: 3em;">
-  <p-table film-table [columns]="cols" [value]="serieTV" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,25,50]"
-    #stvt>
+<div class="col-12" style="padding-left: 5%; padding-right: 5%; padding-top: 3em;">
+  <p-table film-table [columns]="cols" [value]="serieTV" [paginator]="true" [rows]="10"
+    [rowsPerPageOptions]="[5,10,25,50]" #stvt>
     <ng-template pTemplate="header" let-columns>
       <tr>
         <th>
@@ -51,7 +58,10 @@
           {{rowData.stagioni ? rowData.stagioni.length : '-'}}
         </td>
         <td>
-          <p-button icon="fa fa-file-video-o" title="Visualizza Dettagli" (onClick)="goToSerie(rowData.serie_id || rowData._id)"></p-button>
+          <button pButton type="button" title="Visualizza Dettagli"
+            (click)="goToSerie(rowData.serie_id || rowData._id)">
+            <fa-icon class="m-1" [icon]="faSearch"></fa-icon>
+          </button>
         </td>
       </tr>
     </ng-template>

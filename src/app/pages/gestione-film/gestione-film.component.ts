@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, Renderer2 } from '@angular/core';
+import { faPlus, faTrash, faCheck, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { SelectItem, Message, ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Film, ListItem } from 'src/app/core/_api/models';
@@ -47,6 +48,11 @@ export class GestioneFilmComponent implements OnInit {
   blockedDocument = false;
 
   loadingComplete = false;
+
+  faPlus = faPlus
+  faTresh = faTrash
+  faCheck = faCheck
+  faUpload = faUpload
 
   @ViewChild('rt') rt: Table;
 
@@ -316,6 +322,10 @@ export class GestioneFilmComponent implements OnInit {
     return dataCreazione.substring(0, 4) + '/' + dataCreazione.substring(4, 6) + '/' +
       dataCreazione.substring(6, 8) + ' ' + dataCreazione.substring(8, 10) + ':' +
       dataCreazione.substring(10, 12) + ':' + dataCreazione.substring(12, 14) ;
+  }
+
+  applyFilter(table, event: Event, col, filterMethod) {
+    table.filter((event.target as HTMLInputElement).value, col, filterMethod )
   }
 
 }

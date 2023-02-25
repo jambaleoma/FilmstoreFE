@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Table } from 'primeng/table';
 import { Film, ListItem } from 'src/app/core/_api/models';
 import { FilmService } from 'src/app/core/_api/services/film.service';
@@ -37,6 +38,8 @@ export class RicercaFilmComponent implements OnInit {
   blockedDocument = false;
 
   loadingComplete = false;
+
+  faSearch = faSearch;
 
   @ViewChild('ft') table: Table;
 
@@ -158,6 +161,10 @@ export class RicercaFilmComponent implements OnInit {
     this.yearTimeout = setTimeout(() => {
       ft.filter(event.value - 1, 'anno', 'gt');
     }, 250);
+  }
+
+  applyFilter(table, event: Event, col, filterMethod) {
+    table.filter((event.target as HTMLInputElement).value, col, filterMethod )
   }
 
 }

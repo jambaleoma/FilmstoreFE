@@ -1,46 +1,48 @@
 <p-toast [style]="{marginTop: '80px'}" styleClass="error-toast" key="richiesteListTost"></p-toast>
 
-<div class="p-grid-col-12">
-  <div class="p-g">
-    <div class="p-g-2"></div>
-    <div class="p-g-8" style="text-align: center">
-      <h1>Richieste degli Utenti</h1>
-    </div>
-    <div class="p-g-2">
-      <button type="button" pButton icon="fa fa-plus" (click)="showDialogToAdd()" label="Aggiungi Richiesta" style="margin-top: 1em;"></button>
-    </div>
+<div class="grid">
+  <div class="col-2"></div>
+  <div class="col-8" style="text-align: center">
+    <h1>Richieste degli Utenti</h1>
+  </div>
+  <div class="col-2">
+    <button type="button" pButton class="p-button-info" (click)="showDialogToAdd()"
+      style="justify-content: center;margin-top: 1em;">
+      Aggiungi Richiesta <fa-icon class="m-1" [icon]="faPlus"></fa-icon> </button>
   </div>
 </div>
 
 <!-- FILTRI DI RICERCA -->
-<div class="p-grid-col-12">
-  <div class="p-g">
-    <div class="p-g-2 p-g-offset-1">
-      <div class="label"> Richiedente </div>
-      <p-multiSelect [filter]="false" [showToggleAll]="false" [showHeader]="false" [options]="listaRichiedenti"
-        [(ngModel)]="filters.format" (onChange)="rt.filter($event.value, 'nomeCliente', 'in')">
-        <ng-template let-value pTemplate="selectedItems">
-          <div *ngFor="let val of value" class="p-multiselected-item-token p-corner-all">
-            <span>{{val}}</span>
-          </div>
-          <span *ngIf="!value || value.length === 0" class="p-multiselected-empty-token p-corner-all"><i class="fa fa-search"
-              aria-hidden="true" style="margin-right: 5px"></i>Utente</span>
-        </ng-template>
-      </p-multiSelect>
-    </div>
-    <div class="p-g-2 p-g-offset-2">
-      <div class="label"> Titolo Film Richiesto </div>
-      <input film-input type="text" pInputText placeholder=" &#xF002; Titolo" [(ngModel)]="filters.titleMsg" (input)="rt.filter($event.returnValue, 'titoloFilmRichiesto', 'contains')">
-    </div>
-    <div film-button-third class="p-g-3 p-g-offset-2 resetButton" style="padding-right: 5%;">
-      <button pButton type="button" label="Reset Filtri" (click)="reset(rt)" style="margin-top: 14px;"></button>
-    </div>
+<div class="grid">
+  <div class="col-2 col-offset-1">
+    <div class="label"> Richiedente </div>
+    <p-multiSelect [filter]="false" [showToggleAll]="false" [showHeader]="false" [options]="listaRichiedenti"
+      [(ngModel)]="filters.format" (onChange)="rt.filter($event.value, 'nomeCliente', 'in')">
+      <ng-template let-value pTemplate="selectedItems">
+        <div *ngFor="let val of value" class="p-multiselected-item-token p-corner-all">
+          <span>{{val}}</span>
+        </div>
+        <span *ngIf="!value || value.length === 0" class="p-multiselected-empty-token p-corner-all"><i
+            class="fa fa-search" aria-hidden="true" style="margin-right: 5px"></i>Utente</span>
+      </ng-template>
+    </p-multiSelect>
+  </div>
+  <div class="col-2 col-offset-2">
+    <div class="label"> Titolo Film Richiesto </div>
+    <span class="p-input-icon-left">
+      <i class="pi pi-search"></i>
+      <input film-input type="text" pInputText placeholder="Cerca mome" [(ngModel)]="filters.titleFilmRequest"
+        (input)="applyFilter(rt, $event, 'titoloFilmRichiesto', 'contains')">
+    </span>
+  </div>
+  <div film-button-third class="col-3 col-offset-2 resetButton" style="padding-right: 5%;">
+    <button pButton type="button" label="Reset Filtri" (click)="reset(rt)" style="margin-top: 14px;"></button>
   </div>
 </div>
 
 <div class="p-grid-col-12" style="padding-left: 5%; padding-right: 5%; padding-top: 1em;" *ngIf="loggedCustomer">
-  <p-table setting-table [columns]="cols" #rt [value]="richieste" selectionMode="single" [(selection)]="richiestaSelezionata"
-    (onRowSelect)="onRowSelect($event)" [rows]="50">
+  <p-table setting-table [columns]="cols" #rt [value]="richieste" selectionMode="single"
+    [(selection)]="richiestaSelezionata" (onRowSelect)="onRowSelect($event)" [rows]="50">
     <ng-template pTemplate="header" let-columns>
       <tr>
         <th *ngFor="let col of columns">
@@ -62,14 +64,19 @@
           {{rowData[col.field]}}
         </td>
         <td>
-          <p-button icon="fa fa-wrench" label="Assegna" styleClass="p-button-warning" title="Prendi in carico"
-            (onClick)="gestisciRichiesta(rowData, 'Presa_In_Carico')"></p-button>
+          <button type="button" pButton class="p-button-warning" (click)="gestisciRichiesta(rowData, 'Presa_In_Carico')"
+            style="justify-content: center" title="Prendi in carico">
+            Assegna <fa-icon class="m-1" [icon]="faWrench"></fa-icon> </button>
         </td>
         <td>
-          <p-button icon="fa fa-times" label="Rifiuta" styleClass="p-button-danger" title="Rifiuta" (onClick)="gestisciRichiesta(rowData, 'Rifiuta')"></p-button>
+          <button type="button" pButton class="p-button-danger" (click)="gestisciRichiesta(rowData, 'Rifiuta')"
+            style="justify-content: center" title="Rifiuta">
+            Rifiuta <fa-icon class="m-1" [icon]="faTimes"></fa-icon> </button>
         </td>
         <td>
-          <p-button icon="fa fa-check" label="Completa" styleClass="p-button-success" title="Completa" (onClick)="gestisciRichiesta(rowData, 'Completa')"></p-button>
+          <button type="button" pButton class="p-button-success" (click)="gestisciRichiesta(rowData, 'Completa')"
+            style="justify-content: center" title="Completa">
+            Completa <fa-icon class="m-1" [icon]="faCheck"></fa-icon> </button>
         </td>
       </tr>
     </ng-template>
@@ -84,78 +91,77 @@
 </div>
 
 <p-dialog header="Dettaglio Richiesta" [(visible)]="displayDialog" [closable]="true" [responsive]="true" [modal]="true"
-  [positionTop]="50">
+  [positionTop]="50" [style]="{width: '45vw'}">
   <form name="form" #fRichieste="ngForm">
-    <div class="p-g p-fluid" *ngIf="loggedCustomer && richiesta" style="padding-bottom: 2em">
-      <div class="p-g-12">
-        <div class="p-g-2">
-          <label>Avanzamento:</label>
-        </div>
-        <div class="p-g-10" [ngClass]="{
-              'underProcessing':richiesta.stato === 'IN LAVORAZIONE',
-              'inCharge':richiesta.stato === 'PRESA IN CARICO',
-              'complete':richiesta.stato === 'COMPLETATA',
-              'rejected':richiesta.stato === 'RIFIUTATA'
-            }">
-          <p-progressBar [value]="percenutaleAvanzamento"></p-progressBar>
-        </div>
+    <div class="grid p-fluid" *ngIf="loggedCustomer && richiesta" style="padding-bottom: 2em">
+      <div class="col-2">
+        <label>Avanzamento:</label>
       </div>
-      <div class="p-g-12">
-        <div class="p-g-2">
-          <label>Titolo:</label>
-        </div>
-        <div class="p-g-10">
-          <input pInputText id="titolo" name="titolo" [(ngModel)]="richiesta.titoloFilmRichiesto" style="width: 100%" />
-        </div>
+      <div class="col-10" [ngClass]="{
+            'underProcessing':richiesta.stato === 'IN LAVORAZIONE',
+            'inCharge':richiesta.stato === 'PRESA IN CARICO',
+            'complete':richiesta.stato === 'COMPLETATA',
+            'rejected':richiesta.stato === 'RIFIUTATA'
+          }">
+        <p-progressBar [value]="percenutaleAvanzamento"></p-progressBar>
       </div>
-      <div class="p-g-12">
-        <div class="p-g-2">
-          <label>Formato:</label>
-        </div>
-        <div class="p-g-4">
-          <p-dropdown [options]="formats" id="formato" name="formato" [(ngModel)]="richiesta.formatoFilmRichiesto"></p-dropdown>
-        </div>
-        <div class="p-g-2">
-          <label>Richiedente:</label>
-        </div>
-        <div class="p-g-4">
-          <p-dropdown [options]="listaRichiedenti" id="richiedente" name="richiedente" [(ngModel)]="richiesta.nomeCliente"></p-dropdown>
-        </div>
+      <div class="col-2" style="margin-top: 12px;">
+        <label>Titolo:</label>
       </div>
-      <div class="p-g-12">
-        <div class="p-g-2">
-          <label>Stato Richiesta:</label>
-        </div>
-        <div class="p-g-4">
-          <p-dropdown [options]="statiRichiesta" id="stato" name="stato" [(ngModel)]="richiesta.stato"></p-dropdown>
-        </div>
-        <div class="p-g-2">
-          <label>Data:</label>
-        </div>
-        <div class="p-g-4">
-          <input pInputText id="dataInserimento" name="dataInserimento" #titolo [(ngModel)]="richiesta.dataInserimento"
-            style="width: 100%" />
-        </div>
+      <div class="col-10">
+        <input pInputText id="titolo" name="titolo" [(ngModel)]="richiesta.titoloFilmRichiesto" style="width: 100%" />
       </div>
-      <div class="p-g-12">
-        <div class="p-g-2">
-          <label>Note:</label>
-        </div>
-        <div class="p-g-10">
-          <textarea rows="3" id="noteRichiesta" name="noteRichiesta" pInputTextarea [(ngModel)]="richiesta.note"></textarea>
-        </div>
+      <div class="col-2" style="margin-top: 12px;">
+        <label>Formato:</label>
+      </div>
+      <div class="col-4">
+        <p-dropdown [options]="formats" id="formato" name="formato" [(ngModel)]="richiesta.formatoFilmRichiesto">
+        </p-dropdown>
+      </div>
+      <div class="col-2" style="margin-top: 12px;">
+        <label>Richiedente:</label>
+      </div>
+      <div class="col-4">
+        <p-dropdown [options]="listaRichiedenti" id="richiedente" name="richiedente"
+          [(ngModel)]="richiesta.nomeCliente"></p-dropdown>
+      </div>
+      <div class="col-2" style="margin-top: 12px;">
+        <label>Stato Richiesta:</label>
+      </div>
+      <div class="col-4">
+        <p-dropdown [options]="statiRichiesta" id="stato" name="stato" [(ngModel)]="richiesta.stato"></p-dropdown>
+      </div>
+      <div class="col-2" style="margin-top: 12px;">
+        <label>Data:</label>
+      </div>
+      <div class="col-4">
+        <input pInputText id="dataInserimento" name="dataInserimento" #titolo [(ngModel)]="richiesta.dataInserimento"
+          style="width: 100%" />
+      </div>
+      <div class="col-2" style="margin-top: 12px;">
+        <label>Note:</label>
+      </div>
+      <div class="col-10">
+        <textarea rows="3" id="noteRichiesta" name="noteRichiesta" pInputTextarea
+          [(ngModel)]="richiesta.note"></textarea>
       </div>
     </div>
     <p-footer>
-      <div class="p-dialog-buttonpane p-helper-clearfix" style="text-align: center">
-        <div class="p-g-6" *ngIf="!newRichiesta">
-          <button type="button" pButton class="p-button-danger" icon="fa fa-trash-o" (click)="delete()" label="Elimina"></button>
+      <div class="grid p-dialog-buttonpane p-helper-clearfix" style="text-align: center">
+        <div class="col-6" *ngIf="!newRichiesta">
+          <button type="button" pButton class="p-button-danger" (click)="delete()" style="justify-content: center"
+            title="Elimina">
+            Elimina <fa-icon class="m-1" [icon]="faTrash"></fa-icon> </button>
         </div>
-        <div class="p-g-12" *ngIf="newRichiesta">
-          <button type="submit" pButton class="p-button-success" icon="fa fa-check" (click)="save()" label="Salva"></button>
+        <div class="col-12" *ngIf="newRichiesta">
+          <button type="button" pButton class="p-button-success" (click)="save()" style="justify-content: center"
+            title="Salva">
+            Salva <fa-icon class="m-1" [icon]="faCheck"></fa-icon> </button>
         </div>
-        <div class="p-g-6" *ngIf="!newRichiesta">
-          <button type="submit" pButton class="p-button-success" icon="fa fa-upload" (click)="save()" label="Aggiorna"></button>
+        <div class="col-6" *ngIf="!newRichiesta">
+          <button type="button" pButton class="p-button-success" (click)="save()" style="justify-content: center"
+          title="Aggiorna">
+          Aggiorna <fa-icon class="m-1" [icon]="faUpload"></fa-icon> </button>
         </div>
       </div>
     </p-footer>
@@ -164,12 +170,13 @@
 
 <p-confirmDialog #cd>
   <p-footer>
-    <div class="p-dialog-buttonpane p-helper-clearfix">
-      <div class="p-g-3" style="text-align: right">
+    <div class="grid p-dialog-buttonpane p-helper-clearfix">
+      <div class="col-1"></div>
+      <div class="col-3" style="text-align: right">
         <button type="button" pButton icon="pi pi-times" label="No" (click)="cd.reject()"></button>
       </div>
-      <div class="p-g-6"></div>
-      <div class="p-g-3">
+      <div class="col-4"></div>
+      <div class="col-3">
         <button type="button" pButton icon="pi pi-check" label="Si" (click)="cd.accept()"></button>
       </div>
     </div>

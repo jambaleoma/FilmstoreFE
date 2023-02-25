@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Table } from 'primeng/table';
 import { Serie, ListItem } from 'src/app/core/_api/models';
 import { SerieService } from 'src/app/core/_api/services/serie.service';
@@ -22,6 +23,8 @@ export class RicercaSerieTvComponent implements OnInit {
   stagioneFilter: number;
 
   stagioneTimeout: any;
+
+  faSearch = faSearch;
 
   @ViewChild('stvt') table: Table;
 
@@ -66,6 +69,10 @@ export class RicercaSerieTvComponent implements OnInit {
   //  *** Vado a visulizzare nel dattaglio la Serie TV selezionata ***
   goToSerie(serieId: string) {
     this.router.navigate(['filmStore/SerieTV/view', serieId]);
+  }
+
+  applyFilter(table, event: Event, col, filterMethod) {
+    table.filter((event.target as HTMLInputElement).value, col, filterMethod )
   }
 
 }
