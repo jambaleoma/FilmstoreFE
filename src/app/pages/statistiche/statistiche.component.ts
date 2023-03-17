@@ -288,7 +288,7 @@ export class StatisticheComponent {
 
   subsrcibeToListOfFilms() {
     this.filmService.getFilms().subscribe(notification => {
-      this.films = notification;
+      this.films = notification.content;
       const unsortedFilmMap = new Map();
       for (const film of this.films) {
         if (unsortedFilmMap.has(film.anno)) {

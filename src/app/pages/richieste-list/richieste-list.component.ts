@@ -105,10 +105,6 @@ export class RichiesteListComponent implements OnInit {
       {
         field: 'dataInserimento',
         header: 'Data'
-      },
-      {
-        field: 'stato',
-        header: 'Stato Richiesta'
       }
     ];
   }

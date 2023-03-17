@@ -1,11 +1,12 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 
 import { Film } from '../models/film';
 import { Observable, filter, map } from 'rxjs';
+import { PageResponse } from '../models/pageResponse';
 
 @Injectable()
 export class FilmService extends BaseService {
@@ -19,13 +20,50 @@ export class FilmService extends BaseService {
   /**
    * @return List of Films
    */
-  private getFilmsResponse(): Observable<HttpResponse<Film[]>> {
+  private getFilmsResponse(pageNumber: number, pageSize: number): Observable<HttpResponse<PageResponse>> {
+    let queryParams = new HttpParams().append("pageNumber", pageNumber).append("pageSize", pageSize).append("sortBy", "id").append("sortDirection", "DESC");
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `rest/films/pageAll`,
+      __body,
+      {
+        headers: __headers,
+        params: queryParams,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: PageResponse = null;
+        _body = _resp.body as PageResponse;
+        return _resp.clone({ body: _body }) as HttpResponse<PageResponse>;
+      })
+    );
+  }
+
+  /**
+   * @return List of Films
+   */
+  getFilms(pageNumber: number = 0, pageSize: number = 10): Observable<PageResponse> {
+    return this.getFilmsResponse(pageNumber, pageSize).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * @return List of Films
+   */
+  private getAllFilmsByNameResponse(name: string): Observable<HttpResponse<Film[]>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
     let req = new HttpRequest<any>(
       "GET",
-      this.rootUrl + `rest/films/all`,
+      this.rootUrl + `rest/films/byName/` + name,
       __body,
       {
         headers: __headers,
@@ -47,11 +85,12 @@ export class FilmService extends BaseService {
   /**
    * @return List of Films
    */
-  getFilms(): Observable<Film[]> {
-    return this.getFilmsResponse().pipe(
+  getAllFilmsByName(name: string): Observable<Film[]> {
+    return this.getAllFilmsByNameResponse(name).pipe(
       map(_r => _r.body)
     );
   }
+
 
     /**
    * @return Older year of Films

@@ -1,21 +1,58 @@
+.request-badge.status-CO {
+    background: #C8E6C9;
+    color: #256029;
+    text-align: center !important;
+}
+
+.request-badge.status-RI {
+    background: #FFCDD2;
+    color: #c63737;
+    text-align: center !important;
+}
+
+.request-badge.status-IN {
+    background: #FEEDAF;
+    color: #8a5340;
+    text-align: center !important;
+}
+
+.request-badge.status-PR {
+    background: #9c82ca;
+    color: #4209a4;
+    text-align: center !important;
+}
+
+.request-badge {
+    border-radius: 25px;
+    padding: 1rem 1rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px
+}
+
 .inLavorazione {
     background-color: blue !important;
     color: #ffffff !important;
+    text-align: center !important;
 }
 
 .presaInCarico {
     background-color: orange !important;
     color: #ffffff !important;
+    text-align: center !important;
 }
 
 .completata {
     background-color:  rgb(0, 196, 0) !important;
     color: #ffffff !important;
+    text-align: center !important;
 }
 
 .rifiutata {
     background-color: red !important;
     color: #ffffff !important;
+    text-align: center !important;
 }
 
 :host ::ng-deep .p-multiselect {

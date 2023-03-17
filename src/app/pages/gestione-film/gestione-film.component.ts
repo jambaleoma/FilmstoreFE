@@ -129,7 +129,7 @@ export class GestioneFilmComponent implements OnInit {
   subsrcibeToListOfFilm() {
     this.blockDocument();
     this.filmService.getFilms().subscribe(notification => {
-      this.films = notification;
+      this.films = notification.content;
       this.unBlockDocument();
       this.loadingComplete = true;
       this.showFilm = true;

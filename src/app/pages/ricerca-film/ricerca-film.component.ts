@@ -1,8 +1,13 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { LazyLoadEvent, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
+import { catchError, debounceTime, distinctUntilChanged, isEmpty, map, Observable, of, retry, switchMap, tap } from 'rxjs';
 import { Film, ListItem } from 'src/app/core/_api/models';
+import { PageResponse } from 'src/app/core/_api/models/pageResponse';
 import { FilmService } from 'src/app/core/_api/services/film.service';
 import { ApplicationService } from 'src/app/core/_service/application.service';
 
@@ -13,7 +18,26 @@ import { ApplicationService } from 'src/app/core/_service/application.service';
 })
 export class RicercaFilmComponent implements OnInit {
 
+  public filmSearchFilterForm = this.fb.nonNullable.group({
+    name: '',
+    format: '',
+    category: '',
+    yearRange: ''
+  });
+
   filters: any = {};
+
+  public filmNameAsyncInput = new FormControl('');
+
+  public filmFormatAsyncInput = new FormControl();
+
+  public filmCategoryAsyncInput = new FormControl();
+
+  public filmYearAsyncInput = new FormControl();
+
+  public filteredFilm$: Observable<PageResponse | null> = new Observable<PageResponse | null>;
+
+  pageResponse: PageResponse;
 
   films: Film[];
 
@@ -41,12 +65,24 @@ export class RicercaFilmComponent implements OnInit {
 
   faSearch = faSearch;
 
+  first = 0;
+
+  rows = 10;
+
+  totalRecords = 0;
+
+  loading: boolean;
+
+  filterActivate = false;
+
   @ViewChild('ft') table: Table;
 
   constructor(
     private router: Router,
     private filmService: FilmService,
     private applicationService: ApplicationService,
+    private fb: FormBuilder,
+    private messageService: MessageService
   ) {
 
     this.formats = [
@@ -56,13 +92,15 @@ export class RicercaFilmComponent implements OnInit {
       { _id: '3', label: 'DVD', value: 'DVD' }
     ];
 
+    this.filmNameAsyncInput.setValue('', { emitEvent: false });
+
   }
 
   ngOnInit() {
-    this.subsrcibeToListOfFilms();
     this.subscribeToCurrentOlderYearFillms();
     this.subscribeToListOfCategory();
     this.getColumns();
+    this.getFilmByName();
   }
 
   getColumns() {
@@ -84,17 +122,67 @@ export class RicercaFilmComponent implements OnInit {
     ];
   }
 
-  subsrcibeToListOfFilms() {
-    this.blockDocument();
-    this.filmService.getFilms().subscribe(notification => {
-      this.films = notification;
-      this.unBlockDocument();
-      this.loadingComplete = true;
-    });
+  loadFilms(event?: LazyLoadEvent) {
+    if (event) {
+      this.loading = true;
+      const pageNumber = event.first === 0 ? 0 : event.first / event.rows;
+      const pageSize = event.rows;
+      this.filmService.getFilms(pageNumber, pageSize).subscribe(res => {
+        this.films = res.content;
+        this.totalRecords = res.totalElements;
+        this.loading = false;
+      });
+    } else {
+      this.filmService.getFilms(0, 10).subscribe(res => {
+        this.films = res.content;
+        this.totalRecords = res.totalElements;
+        this.loading = false;
+      });
+    }
+  }
+
+  getFilmByName(): Observable<Film[]> | any {
+    this.filmNameAsyncInput.valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+        tap(_ => {
+          this.loading = true;
+          return true;
+        }),
+        switchMap(
+          text => this.filmService.getAllFilmsByName(text)
+          .pipe(
+            catchError(err => {
+              this.messageService.add({
+                key: 'filmListTost',
+                severity: 'error', summary: 'Errore', detail: err.error.message
+              });
+              this.loading = false;  
+              return of(null)
+            })  
+          )
+        ),
+      )
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this.filterActivate = true
+          } else {
+            setTimeout(() => {
+              location.reload();              
+            }, 1500);
+          }
+          this.loading = false;
+          this.films = res;
+          return res;
+        },
+        error: (err) => console.log(err)
+      });
   }
 
   subscribeToCurrentOlderYearFillms() {
-    this.filmService.getOlderYearFilms().subscribe( notification => {
+    this.filmService.getOlderYearFilms().subscribe(notification => {
       this.currentOlderYearFilm = notification.split('-').map((year) => {
         return parseInt(year, 10);
       });
@@ -125,7 +213,7 @@ export class RicercaFilmComponent implements OnInit {
         if (notification) {
           this.unBlockDocument();
           for (const singleCategory of category) {
-            this.filmsByCategory = notification.filter(film => film.categoria.includes(singleCategory));
+            this.filmsByCategory = notification.content.filter(film => film.categoria.includes(singleCategory));
             this.filmsByCategory.forEach(film => {
               if (!this.films.includes(film)) {
                 this.films.push(film);
@@ -136,16 +224,17 @@ export class RicercaFilmComponent implements OnInit {
         }
       });
     } else {
-      this.subsrcibeToListOfFilms();
+      this.loadFilms();
     }
   }
 
   //  *** Reset Valori selzionati nei Filtri ***
   reset(ft: Table) {
+    this.first = 0;
     ft.reset();
     this.filters = {};
     this.yearFilter = null;
-    this.subsrcibeToListOfFilms();
+    this.loadFilms();
   }
 
   //  *** Vado a visulizzare nel dattaglio il film selezionato ***
@@ -164,7 +253,7 @@ export class RicercaFilmComponent implements OnInit {
   }
 
   applyFilter(table, event: Event, col, filterMethod) {
-    table.filter((event.target as HTMLInputElement).value, col, filterMethod )
+    table.filter((event.target as HTMLInputElement).value, col, filterMethod)
   }
 
 }

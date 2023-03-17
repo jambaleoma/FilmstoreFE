@@ -48,6 +48,9 @@
         <th *ngFor="let col of columns">
           {{col.header}}
         </th>
+        <th style="text-align: center;">
+          Stato Richiesta
+        </th>
         <th [attr.colspan]="3">
           Gestisci Richiesta
         </th>
@@ -62,6 +65,11 @@
           'rifiutata':rowData[col.field] === 'RIFIUTATA'
         }">
           {{rowData[col.field]}}
+        </td>
+        <td style="text-align: center;">
+          <span [class]="'request-badge status-' + rowData.stato?.slice(0, 2)">
+            {{rowData.stato}}
+          </span>
         </td>
         <td>
           <button type="button" pButton class="p-button-warning" (click)="gestisciRichiesta(rowData, 'Presa_In_Carico')"
