@@ -1,0 +1,26 @@
+image: node:18.12.1
+
+stages:
+  - setup
+  - test
+  - deploy
+
+install:
+  stage: setup
+  script:
+    - npm ci
+
+unit test:
+  stage: test
+  before_script:
+    - apt-get update
+  script:
+    - npm ci
+    - npm run test --no-watch --browsers=ChromeHeadlessCI
+
+deployment:
+    stage: deploy
+    before_script:
+      - npm ci
+    script:
+      - npx cross-env NG_DEPLOY_AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID NG_DEPLOY_AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY NG_DEPLOY_AWS_BUCKET=authapp NG_DEPLOY_AWS_REGION=eu-central-1 ng deploy
