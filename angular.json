@@ -71,10 +71,12 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "FilmStoreFE:build:production"
+              "browserTarget": "FilmStoreFE:build:production",
+              "proxyConfig": "src/proxy.conf.json"
             },
             "development": {
-              "browserTarget": "FilmStoreFE:build:development"
+              "browserTarget": "FilmStoreFE:build:development",
+              "proxyConfig": "src/proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
