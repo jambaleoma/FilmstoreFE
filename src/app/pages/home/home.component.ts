@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.loggedCustomer = JSON.parse(sessionStorage.getItem('customer'));
-    if (this.loggedCustomer.categoriePreferite && this.loggedCustomer.categoriePreferite.length > 0) {
+    if (this.loggedCustomer?.categoriePreferite && this.loggedCustomer.categoriePreferite.length > 0) {
       this.getRecommendedFilm();
     }
     this.getNewFilm();

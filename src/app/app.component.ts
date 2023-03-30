@@ -1,11 +1,10 @@
 import { ApplicationService } from './core/_service/application.service';
 import { Component, OnInit } from '@angular/core';
-import { ListItem } from './core/_api/models';
 import { TranslateService } from '@ngx-translate/core';
 import { PrimeNGConfig } from 'primeng/api';
 
-const audioFileJson: ListItem[] = require('./../assets/JSON/audio&subtitle.json');
-const categoryFileJson: ListItem[] = require('./../assets/JSON/category.json');
+import audioFileJson from './../assets/JSON/audio&subtitle.json';
+import categoryJson from './../assets/JSON/category.json';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +25,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.applicationService.setCountriesItems(audioFileJson);
-    this.applicationService.setCategoriesItems(categoryFileJson);
+    this.applicationService.setCountriesItems(audioFileJson.audioFile);
+    this.applicationService.setCategoriesItems(categoryJson.category);
   }
 }

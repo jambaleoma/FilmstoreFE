@@ -16,8 +16,8 @@
 <div class="grid">
   <div class="col-2 col-offset-1">
     <div class="label"> Richiedente </div>
-    <p-multiSelect [filter]="false" [showToggleAll]="false" [showHeader]="false" [options]="listaRichiedenti"
-      [(ngModel)]="filters.format" (onChange)="rt.filter($event.value, 'nomeCliente', 'in')">
+    <p-multiSelect name="richiedente" [filter]="false" [showToggleAll]="false" [showHeader]="false" [options]="listaRichiedenti"
+      [(ngModel)]="filters.format" ngDefaultControl (onChange)="rt.filter($event.value, 'nomeCliente', 'in')">
       <ng-template let-value pTemplate="selectedItems">
         <div *ngFor="let val of value" class="p-multiselected-item-token p-corner-all">
           <span>{{val}}</span>
@@ -31,7 +31,7 @@
     <div class="label"> Titolo Film Richiesto </div>
     <span class="p-input-icon-left">
       <i class="pi pi-search"></i>
-      <input film-input type="text" pInputText placeholder="Cerca mome" [(ngModel)]="filters.titleFilmRequest"
+      <input film-input type="text" pInputText placeholder="Cerca mome" ngDefaultControl name="titoloFilm" [(ngModel)]="filters.titleFilmRequest"
         (input)="applyFilter(rt, $event, 'titoloFilmRichiesto', 'contains')">
     </span>
   </div>

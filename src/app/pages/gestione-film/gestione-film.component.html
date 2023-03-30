@@ -23,13 +23,13 @@
     <div class="label"> Nome Film </div>
     <span class="p-input-icon-left">
       <i class="pi pi-search"></i>
-      <input film-input type="text" pInputText placeholder="Cerca mome" [(ngModel)]="filters.titleFilm"
+      <input film-input type="text" name="nomeFilm" ngDefaultControl pInputText placeholder="Cerca mome" [(ngModel)]="filters.titleFilm"
         (input)="applyFilter(rt, $event, 'nome', 'contains')">
     </span>
   </div>
   <div class="col-3 col-offset-1">
     <div class="label">Formato Film </div>
-    <p-multiSelect [filter]="false" [showToggleAll]="false" [showHeader]="false" [options]="formatiFilter"
+    <p-multiSelect [filter]="false" [showToggleAll]="false" [showHeader]="false" [options]="formatiFilter" name="formatoFilm" ngDefaultControl
       [(ngModel)]="filters.format" (onChange)="rt.filter($event.value, 'formato', 'in')" class="multiselect-custom">
       <ng-template let-value pTemplate="selectedItems">
         <div *ngFor="let val of value" class="format-placeholder">
@@ -86,35 +86,35 @@
           <label>Titolo Film:</label>
         </div>
         <div class="col-10">
-          <input pInputText id="titolo" name="titolo" [(ngModel)]="film.nome" style="width: 100%" />
+          <input pInputText id="titolo" name="titolo" ngDefaultControl [(ngModel)]="film.nome" style="width: 100%" />
         </div>
         <div class="col-2" style="margin-top: 12px;">
           <label>Formato Film:</label>
         </div>
         <div class="col-4" *ngIf="newFilm">
-          <p-dropdown [options]="formats" id="formato" name="formato" [(ngModel)]="film.formato"></p-dropdown>
+          <p-dropdown [options]="formats" id="formato" ngDefaultControl name="formato" [(ngModel)]="film.formato"></p-dropdown>
         </div>
         <div class="col-4" *ngIf="!newFilm">
-          <p-dropdown [options]="formatDialog" id="formato" name="formato" [(ngModel)]="film.formato"></p-dropdown>
+          <p-dropdown [options]="formatDialog" id="formato" ngDefaultControl name="formato" [(ngModel)]="film.formato"></p-dropdown>
         </div>
         <div class="col-2" style="text-align: center; margin-top: 12px;">
           <label>Anno Film:</label>
         </div>
         <div class="col-4">
-          <p-inputMask id="anno" name="anno" mask="9999" [(ngModel)]="film.anno" slotChar="AAAA"></p-inputMask>
+          <p-inputMask id="anno" name="anno" ngDefaultControl mask="9999" [(ngModel)]="film.anno" slotChar="AAAA"></p-inputMask>
         </div>
         <div class="col-2" style="margin-top: 12px;">
           <label>Categoria:</label>
         </div>
         <div class="col-10">
-          <p-multiSelect name="categoria" [showToggleAll]="false" [options]="category" [filter]="false"
+          <p-multiSelect name="categoria" ngDefaultControl [showToggleAll]="false" [options]="category" [filter]="false"
             [(ngModel)]="film.categoria" [panelStyle]="{minWidth:'12em'}" defaultLabel="-"></p-multiSelect>
         </div>
         <div class="col-2" style="margin-top: 12px;">
           <label>Audio:</label>
         </div>
         <div class="col-4">
-          <p-multiSelect name="audio" [options]="audios" [(ngModel)]="film.linguaAudio" [panelStyle]="{minWidth:'12em'}"
+          <p-multiSelect name="audio" [options]="audios" ngDefaultControl [(ngModel)]="film.linguaAudio" [panelStyle]="{minWidth:'12em'}"
             defaultLabel="-">
             <ng-template let-audio pTemplate="selectedItems">
               <div *ngFor="let val of audio" class="p-multiselected-item-token p-corner-all">
@@ -135,7 +135,7 @@
           <label>Sottotitoli:</label>
         </div>
         <div class="col-4">
-          <p-multiSelect name="subtitle" [options]="audios" [(ngModel)]="film.linguaSottotitoli"
+          <p-multiSelect name="subtitle" [options]="audios" ngDefaultControl [(ngModel)]="film.linguaSottotitoli"
             [panelStyle]="{minWidth:'12em'}" defaultLabel="-">
             <ng-template let-audio pTemplate="selectedItems">
               <div *ngFor="let val of audio" class="p-multiselected-item-token p-corner-all">
@@ -156,7 +156,7 @@
           <label>Trama:</label>
         </div>
         <div class="col-10">
-          <textarea rows="3" id="trama" name="trama" pInputTextarea [(ngModel)]="film.trama" [autoResize]="true"></textarea>
+          <textarea rows="3" id="trama" name="trama" pInputTextarea ngDefaultControl [(ngModel)]="film.trama" [autoResize]="true"></textarea>
         </div>
       </div>
       <div *ngIf="!newFilm && !film.locandina" class="col-12" style="text-align: center">
