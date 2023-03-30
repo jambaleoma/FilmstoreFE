@@ -19,7 +19,7 @@ unit test:
     - export CHROME_BIN=/usr/bin/google-chrome
   script:
     - npm ci
-    - npm run test -- --no-watch --browsers=ChromeHeadless
+    - npm run test -- --no-watch --browsers=ChromeHeadlessCI
 
 deployment:
     stage: deploy
