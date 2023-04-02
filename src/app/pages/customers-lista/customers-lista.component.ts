@@ -5,6 +5,7 @@ import { Table } from 'primeng/table';
 import { Customer, ListItem } from 'src/app/core/_api/models';
 import { CustomerService } from 'src/app/core/_api/services/customer.service';
 import { ApplicationService } from 'src/app/core/_service/application.service';
+import { faCog, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-customers-lista',
@@ -42,6 +43,10 @@ export class CustomersListaComponent implements OnInit {
   category: string[] = [];
 
   postPath: string;
+
+  faSearch = faSearch;
+
+  faCog= faCog;
 
   @ViewChild('ct') ct: Table;
 

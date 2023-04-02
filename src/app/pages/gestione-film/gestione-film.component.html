@@ -1,14 +1,7 @@
 <p-toast [style]="{marginTop: '80px'}" styleClass="error-toast" key="gestioneFilmTost"></p-toast>
 
-<p-blockUI [blocked]="blockedDocument">
-  <p-progressSpinner [style]="{width: '100px', height: '100px'}" strokeWidth="8" animationDuration=".5s"
-    class="centered"></p-progressSpinner>
-</p-blockUI>
-
-
 <div class="grid">
-  <div class="col-2"></div>
-  <div class="col-8" style="text-align: center">
+  <div class="col-8 col-offset-2" style="text-align: center">
     <h1>Gestione Film</h1>
   </div>
   <div class="col-2" style="margin-top: 1em;">
@@ -19,36 +12,30 @@
 
 <!-- FILTRI DI RICERCA -->
 <div class="grid">
-  <div class="col-3 col-offset-1">
-    <div class="label"> Nome Film </div>
-    <span class="p-input-icon-left">
-      <i class="pi pi-search"></i>
-      <input film-input type="text" name="nomeFilm" ngDefaultControl pInputText placeholder="Cerca mome" [(ngModel)]="filters.titleFilm"
-        (input)="applyFilter(rt, $event, 'nome', 'contains')">
-    </span>
-  </div>
-  <div class="col-3 col-offset-1">
-    <div class="label">Formato Film </div>
-    <p-multiSelect [filter]="false" [showToggleAll]="false" [showHeader]="false" [options]="formatiFilter" name="formatoFilm" ngDefaultControl
-      [(ngModel)]="filters.format" (onChange)="rt.filter($event.value, 'formato', 'in')" class="multiselect-custom">
-      <ng-template let-value pTemplate="selectedItems">
-        <div *ngFor="let val of value" class="format-placeholder">
-          <span>{{val}}</span>
-        </div>
-        <span *ngIf="!value || value.length === 0" class="format-placeholder"><i class="fa fa-search" aria-hidden="true"
-            style="margin-right: 5px"></i>Formato</span>
-      </ng-template>
-    </p-multiSelect>
-  </div>
-  <div film-button-third class="col-3 col-offset-1 resetButton" style="padding-right: 5%;">
-    <button pButton type="button" label="Reset Filtri" (click)="reset(rt)" style="margin-top: 14px;"></button>
-  </div>
+  <form [formGroup]="filmSearchFilterForm" style="display: contents">
+    <div class="col-3 col-offset-1">
+      <div class="label"> Nome Film </div>
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input film-input type="text" name="nomeFilm" [formControl]="filmNameAsyncInput" formControlName="name" pInputText placeholder="Cerca mome">
+      </span>
+    </div>
+    <div class="col-3 col-offset-1">
+      <div class="label">Formato Film </div>
+      <p-dropdown [options]="formats" placeholder="Cerca Formato" [showClear]="true" formControlName="format" [formControl]="filmFormatAsyncInput"></p-dropdown>
+    </div>
+    <div film-button-third class="col-3 col-offset-1 resetButton" style="padding-right: 5%;">
+      <button pButton type="button" label="Reset Filtri" (click)="resetFilterForm()" style="margin-top: 14px;"></button>
+    </div>
+  </form>
 </div>
 
 <!-- TABELLA DEI FILM -->
 <div class="p-grid-col-12" style="padding-top: 2em; padding-left: 5%; padding-right: 5%">
   <p-table setting-table [columns]="cols" #rt [value]="films" selectionMode="single" [(selection)]="filmSelezionato"
-    (onRowSelect)="onRowSelect($event)" [rows]="50">
+    (onRowSelect)="onRowSelect($event)" [rows]="50" [loading]="loading" [lazy]="true" (onLazyLoad)="subsrcibeToListOfFilm($event)"
+    [paginator]="films?.length > 0" [rows]="10" [rowsPerPageOptions]="[5,10,25,50]" [totalRecords]="totalRecords"
+    [showCurrentPageReport]="true" currentPageReportTemplate="{first} di {last} dei {totalRecords} Film">
     <ng-template pTemplate="header" let-columns>
       <tr>
         <th *ngFor="let col of columns">
@@ -62,17 +49,12 @@
         </td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="emptymessage" *ngIf="loadingComplete">
+    <ng-template pTemplate="emptymessage" *ngIf="loading">
       <tr>
         <td [attr.colspan]="cols.length">
           Nessun Film Trovato
         </td>
       </tr>
-    </ng-template>
-    <ng-template pTemplate="summary">
-      <span *ngIf="loadingComplete">
-        Film Torvati: {{this.rt.filteredValue ? this.rt.filteredValue.length : this.rt.totalRecords }}
-      </span>
     </ng-template>
   </p-table>
 </div>
@@ -191,13 +173,9 @@
 
 <p-confirmDialog #cd>
   <p-footer>
-    <div class="grid p-dialog-buttonpane p-helper-clearfix">
-      <div class="col-1"></div>
-      <div class="col-3" style="text-align: right">
+    <div class="p-dialog-buttonpane p-helper-clearfix">
+      <div style="display: flex; flex-direction: row; justify-content: space-between;">
         <button type="button" pButton icon="pi pi-times" label="No" (click)="cd.reject()"></button>
-      </div>
-      <div class="col-4"></div>
-      <div class="col-3">
         <button type="button" pButton icon="pi pi-check" label="Si" (click)="cd.accept()"></button>
       </div>
     </div>

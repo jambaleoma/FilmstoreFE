@@ -1,38 +1,29 @@
 <p-toast [style]="{marginTop: '80px'}" styleClass="error-toast" key="filmListTost"></p-toast>
+
 <div>
   <h1 style="text-align: center">Elenco Film</h1>
 </div>
+
 <!-- FILTRI DI RICERCA -->
 <div class="grid" style="padding-left: 5%; padding-right: 5%;">
   <form [formGroup]="filmSearchFilterForm" style="display: contents">
-    <div class="col-12 md:col-4 lg:col-2" style="padding-left: 0px">
+    <div class="col-12 md:col-4 lg:col-2" style="padding-left: 0px; text-align: center;">
       <h5 style="font-size: 1em;"> Nome Film </h5>
       <span class="p-input-icon-left">
         <i class="pi pi-search"></i>
-        <input type="text" pInputText placeholder="Cerca mome" [formControl]="filmNameAsyncInput">
+        <input type="text" pInputText placeholder="Cerca mome" [formControl]="filmNameAsyncInput" formControlName="name">
         <span style="margin-left:-20px;">
       </span> 
       </span>
     </div>
-    <div class="col-12 md:col-4 lg:col-3" style="padding-left: 0px">
+    <div class="col-12 md:col-4 lg:col-3" style="padding-left: 0px; text-align: center;">
       <h5 style="font-size: 1em;"> Formato Film </h5>
-      <p-multiSelect [filter]="false" [showToggleAll]="false" defaultLabel=" &#xF002; Cerca Formato"
-        [showHeader]="false" [panelStyle]="{minWidth:'12em'}" [options]="formats">
-        <ng-template let-value pTemplate="selectedItems">
-          <div *ngFor="let val of value" class="p-multiselected-item-token p-corner-all">
-            <span>{{val}}</span>
-          </div>
-          <span *ngIf="!value || value.length === 0" class="p-multiselected-empty-token p-corner-all">
-            <i class="pi pi-search" style="margin-right: 1em;"></i>
-            Cerca Formato
-          </span>
-        </ng-template>
-      </p-multiSelect>
+      <p-dropdown [options]="formats" placeholder="Cerca Formato" [showClear]="true" formControlName="format" [formControl]="filmFormatAsyncInput"></p-dropdown>
     </div>
-    <div class="col-12 md:col-4 lg:col-3" style="padding-left: 0px">
+    <div class="col-12 md:col-4 lg:col-2" style="padding-left: 0px; text-align: center;">
       <h5 style="font-size: 1em;"> Categoria Film </h5>
       <p-multiSelect [filter]="false" [showToggleAll]="false" defaultLabel="Cerca Categoria" [showHeader]="false"
-        [panelStyle]="{minWidth:'12em'}" [options]="category">
+        [panelStyle]="{minWidth:'12em'}" [options]="category" formControlName="category" [formControl]="filmCategoryAsyncInput">
         <ng-template let-value pTemplate="selectedItems">
           <div *ngFor="let val of value" class="p-multiselected-item-token p-corner-all">
             <img src="./../../assets/showcase/images/categorie/{{val}}.png"
@@ -51,21 +42,20 @@
         </ng-template>
       </p-multiSelect>
     </div>
-    <div class="col-12 md:col-6 lg:col-3">
-      <div class="label" style="text-align: center; font-family: FontAwesome;"> Film dal {{yearFilter ||
-    minYear}} al {{maxYear}} </div>
-      <p-slider [style]="{'width':'80%','margin-top':'14px','margin-left':'10%'}"
-        [min]="minYear" [max]="maxYear"></p-slider>
+    <div class="col-12 md:col-6 lg:col-4" style="padding-left: 0px; text-align: center;">
+      <h5 style="font-size: 1em; padding-bottom: 20px;"> Film dal {{yearFilter ? yearFilter : minYear}} al {{maxYear}} </h5>
+      <p-slider *ngIf="rangeValues" (onChange)="onYearChange($event)" [style]="{'width':'55%','margin-left':'23%'}"
+        [min]="minYear" [max]="maxYear" [formControl]="filmYearAsyncInput" formControlName="yearRange"></p-slider>
     </div>
     <div film-button-third class="col-12 md:col-6 lg:col-1 resetButton" style="text-align: right; padding-right: 0px;">
-      <button pButton type="button" label="Reset Filtri" style="margin-top: 14px;"></button>
+      <button pButton type="button" (click)="resetFilterForm()" label="Reset Filtri" style="margin-top: 14px;"></button>
     </div>
   </form>
 </div>
 <div class="col-12" style="padding-left: 5%; padding-right: 5%; padding-top: 3em;">
   <p-table [value]="films" [lazy]="true" (onLazyLoad)="loadFilms($event)" film-table [columns]="cols" #ft
-    [paginator]="!filterActivate && films?.length > 0" [rows]="10" [rowsPerPageOptions]="[5,10,25,50]" [totalRecords]="totalRecords"
-    [loading]="loading" [showCurrentPageReport]="!filterActivate && films?.length > 0"
+    [paginator]="films?.length > 0" [rows]="10" [rowsPerPageOptions]="[5,10,25,50]" [totalRecords]="totalRecords"
+    [loading]="loading" [showCurrentPageReport]="true"
     currentPageReportTemplate="{first} di {last} dei {totalRecords} Film">
     <ng-template pTemplate="colgroup" let-columns>
       <colgroup>
@@ -115,17 +105,12 @@
         </td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="emptymessage" *ngIf="loadingComplete">
+    <ng-template pTemplate="emptymessage" *ngIf="loading">
       <tr>
         <td [attr.colspan]="cols.length + 4">
           Nessun Film Trovato
         </td>
       </tr>
-    </ng-template>
-    <ng-template pTemplate="summary">
-      <span *ngIf="loadingComplete">
-        Film Torvati: {{this.table.filteredValue ? this.table.filteredValue.length : this.table.totalRecords }}
-      </span>
     </ng-template>
   </p-table>
 </div>

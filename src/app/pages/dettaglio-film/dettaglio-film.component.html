@@ -4,64 +4,56 @@
   </h1>
 </div>
 
-<p-dataView #dv [value]="films" [rows]="20">
-  <ng-template let-film pTemplate="listItem">
-    <div class="p-g">
-      <div class="p-g-12 p-md-3" style="text-align:center">
-        <img [src]="film.locandina" style="width: 70%;">
-      </div>
+<div class="card flex justify-content-center" *ngIf="films[0] as film">
+  <p-card [style]="{ width: '600px' }">
+      <ng-template pTemplate="header">
+          <img alt="Card" [src]="film.locandina" style="width: 100%;" />
+      </ng-template>
       <div class="p-g-12 p-md-8" *ngIf="voto">
-        <div class="p-g">
-          <div class="p-g-1 p-sm-5">Anno: </div>
-          <div class="p-g-4 p-sm-5"><b>{{film.anno}}</b></div>
-
-          <div class="p-g-2 p-sm-5" style="padding-right: 20px; padding-top: 10px;">Vota Film: </div>
-          <div class="p-g-3 p-sm-5">
-            <p-rating [(ngModel)]="voto.votazione" [stars]="10" [cancel]="false" (onRate)="upDateVoto()"></p-rating>
-          </div>
-          <div *ngIf="voto.votazione" class="p-g-2 p-sm-2" style="padding-top: 10px;">{{voto.votazione}} / 10</div>
-          <div *ngIf="!voto.votazione" class="p-g-2 p-sm-2" style="padding-top: 10px;"></div>
-
-          <div class="p-g-2 p-sm-6">Formato: </div>
-          <div class="p-g-10 p-sm-6"><b>{{film.formato}}</b></div>
-
-          <div class="p-g-2 p-sm-6">Categoria: </div>
-          <div class="p-g-10 p-sm-6"><b>{{film.categoria.join(', ')}}</b></div>
-
-          <div class="p-g-2 p-sm-6">Lingua Audio: </div>
-          <div class="p-g-10 p-sm-6">
-            <span *ngFor="let lingua of film.linguaAudio">
-              <img src="assets/showcase/images/flags/{{lingua}}.png" title="{{lingua}}">
-              <span>{{lingua}}</span>
-            </span>
-          </div>
-
-          <div class="p-g-2 p-sm-6">Lingua Sottotitoli: </div>
-          <div class="p-g-5 p-sm-6">
-            <span *ngFor="let linguaSub of film.linguaSottotitoli">
-              <img src="assets/showcase/images/flags/{{linguaSub}}.png" title="{{linguaSub}}">
-              <span>{{linguaSub}}</span>
-            </span>
-            <span *ngIf="!film.linguaSottotitoli"> - </span>
-          </div>
-
-          <div class="p-g-2 p-sm-6">
-            <p-toggleButton [(ngModel)]="voto.like" onLabel="" offLabel="" onIcon="fa-thumbs-o-up" offIcon="fa fa-thumbs-o-up"
-              [style]="{'width':'150px'}" (onChange)="likeFilm()"></p-toggleButton>
-          </div>
-          <div class="p-g-3 p-sm-6">
-            <p-toggleButton [(ngModel)]="dislike" onLabel="" offLabel="" onIcon="fa-thumbs-o-down" offIcon="fa fa-thumbs-o-down"
-              [style]="{'width':'150px'}" (onChange)="dislikeFilm()"></p-toggleButton>
-          </div>
-
-          <div class="p-g-2 p-sm-6"></div>
-          <div class="p-g-10 p-sm-6"><b></b></div>
-
-          <div class="p-g-12 p-sm-12">Trama: </div>
-          <div class="p-g-12 p-sm-12">{{film.trama}}</div>
-
+        <div class="p-g-1 p-sm-5">Anno: </div>
+        <div class="p-g-4 p-sm-5"><b>{{film.anno}}</b></div>
+  
+        <div class="p-g-2 p-sm-5" style="padding-right: 20px; padding-top: 10px;">Vota Film: </div>
+        <div class="p-g-3 p-sm-5">
+          <p-rating [(ngModel)]="voto.votazione" [stars]="10" [cancel]="false" (onRate)="upDateVoto()"></p-rating>
         </div>
+        <div *ngIf="voto.votazione" class="p-g-2 p-sm-2" style="padding-top: 10px;">{{voto.votazione}} / 10</div>
+        <div *ngIf="!voto.votazione" class="p-g-2 p-sm-2" style="padding-top: 10px;"></div>
+  
+        <div class="p-g-2 p-sm-6">Formato: </div>
+        <div class="p-g-10 p-sm-6" style="padding-bottom: 1em;"><b>{{film.formato}}</b></div>
+  
+        <div class="p-g-2 p-sm-6">Categoria: </div>
+        <div class="p-g-10 p-sm-6" style="padding-bottom: 1em;"><b>{{film.categoria.join(', ')}}</b></div>
+  
+        <div class="p-g-2 p-sm-6">Lingua Audio: </div>
+        <div class="p-g-10 p-sm-6" style="padding-bottom: 1em;">
+          <span *ngFor="let lingua of film.linguaAudio">
+            <img src="assets/showcase/images/flags/{{lingua}}.png" title="{{lingua}}">
+          </span>
+        </div>
+  
+        <div class="p-g-2 p-sm-6">Lingua Sottotitoli: </div>
+        <div class="p-g-5 p-sm-6" style="padding-bottom: 1em;">
+          <span *ngFor="let linguaSub of film.linguaSottotitoli">
+            <img src="assets/showcase/images/flags/{{linguaSub}}.png" title="{{linguaSub}}">
+          </span>
+          <span *ngIf="!film.linguaSottotitoli"> - </span>
+        </div>
+  
+        <div class="p-g-2 p-sm-6" style="padding-bottom: 1em;">
+          <p-toggleButton [(ngModel)]="voto.like" onLabel="" offLabel="" onIcon="pi pi-thumbs-up"
+            offIcon="pi pi-thumbs-up" [style]="{ 'width': '150px', 'margin-right': '2em' }" (onChange)="likeFilm()"></p-toggleButton>
+          <p-toggleButton  [(ngModel)]="dislike" onLabel="" offLabel="" onIcon="pi pi-thumbs-down"
+            offIcon="pi pi-thumbs-down" [style]="{'width':'150px'}" (onChange)="dislikeFilm()"></p-toggleButton>
+        </div>
+  
+        <div class="p-g-2 p-sm-6"></div>
+        <div class="p-g-10 p-sm-6"><b></b></div>
+  
+        <div class="p-g-12 p-sm-12">Trama: </div>
+        <div class="p-g-12 p-sm-12">{{film.trama}}</div>
+  
       </div>
-    </div>
-  </ng-template>
-</p-dataView>
+  </p-card>
+</div>

@@ -6,6 +6,7 @@ import { Table } from 'primeng/table';
 import { Richiesta, Customer } from 'src/app/core/_api/models';
 import { CustomerService } from 'src/app/core/_api/services/customer.service';
 import { RichiestaService } from 'src/app/core/_api/services/richiesta.service';
+import { faCheck, faPlus, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-richieste-utente',
@@ -45,6 +46,11 @@ export class RichiesteUtenteComponent implements OnInit {
   loggedCustomer: Customer;
 
   percenutaleAvanzamento: number;
+
+  faPlus = faPlus;
+  faCheck = faCheck;
+  faUpload = faUpload;
+  faTrash = faTrash;
 
   @ViewChild('rt') rt: Table;
 
@@ -102,10 +108,6 @@ export class RichiesteUtenteComponent implements OnInit {
       {
         field: 'dataInserimento',
         header: 'Data'
-      },
-      {
-        field: 'stato',
-        header: 'Stato Richiesta'
       }
     ];
   }

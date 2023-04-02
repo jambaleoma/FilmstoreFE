@@ -55,10 +55,10 @@ export class FilmService extends BaseService {
   }
 
   /**
-   * @return List of Films
+   * @return List of Films By Name
    */
-  private getAllFilmsByNameResponse(name: string): Observable<HttpResponse<Film[]>> {
-    let __params = this.newParams();
+  private getAllFilmsByNameResponse(name: string, pageNumber: number = 0, pageSize: number = 10): Observable<HttpResponse<PageResponse>> {
+    let queryParams = new HttpParams().append("pageNumber", pageNumber).append("pageSize", pageSize).append("sortBy", "id").append("sortDirection", "DESC");
     let __headers = new HttpHeaders();
     let __body: any = null;
     let req = new HttpRequest<any>(
@@ -67,7 +67,7 @@ export class FilmService extends BaseService {
       __body,
       {
         headers: __headers,
-        params: __params,
+        params: queryParams,
         responseType: 'json'
       });
 
@@ -75,18 +75,92 @@ export class FilmService extends BaseService {
       filter(_r => _r instanceof HttpResponse),
       map(_r => {
         let _resp = _r as HttpResponse<any>;
-        let _body: Film[] = null;
-        _body = _resp.body as Film[];
-        return _resp.clone({ body: _body }) as HttpResponse<Film[]>;
+        let _body: PageResponse = null;
+        _body = _resp.body as PageResponse;
+        return _resp.clone({ body: _body }) as HttpResponse<PageResponse>;
       })
     );
   }
 
   /**
-   * @return List of Films
+   * @return List of Films By Name
    */
-  getAllFilmsByName(name: string): Observable<Film[]> {
-    return this.getAllFilmsByNameResponse(name).pipe(
+  getAllFilmsByName(name: string, pageNumber: number = 0, pageSize: number = 10): Observable<PageResponse> {
+    return this.getAllFilmsByNameResponse(name, pageNumber, pageSize).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * @return List of Films By Format
+   */
+  private getAllFilmsByFormatResponse(format: string, pageNumber: number = 0, pageSize: number = 10): Observable<HttpResponse<PageResponse>> {
+    let queryParams = new HttpParams().append("pageNumber", pageNumber).append("pageSize", pageSize).append("sortBy", "id").append("sortDirection", "DESC");
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `rest/films/byFormat/` + format,
+      __body,
+      {
+        headers: __headers,
+        params: queryParams,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: PageResponse = null;
+        _body = _resp.body as PageResponse;
+        return _resp.clone({ body: _body }) as HttpResponse<PageResponse>;
+      })
+    );
+  }
+
+  /**
+   * @return List of Films By Name
+   */
+  getAllFilmsByFormat(format: string, pageNumber: number = 0, pageSize: number = 10): Observable<PageResponse> {
+    return this.getAllFilmsByFormatResponse(format, pageNumber, pageSize).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * @return List of Films By Category
+   */
+  private getAllFilmsByCategoryResponse(categories: string, pageNumber: number = 0, pageSize: number = 10): Observable<HttpResponse<PageResponse>> {
+    let queryParams = new HttpParams().append("pageNumber", pageNumber).append("pageSize", pageSize).append("sortBy", "id").append("sortDirection", "DESC");
+    let __headers = new HttpHeaders();
+    let __body: any = categories;
+    let req = new HttpRequest<any>(
+      "POST",
+      this.rootUrl + `rest/films/byCategory`,
+      __body,
+      {
+        headers: __headers,
+        params: queryParams,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: PageResponse = null;
+        _body = _resp.body as PageResponse;
+        return _resp.clone({ body: _body }) as HttpResponse<PageResponse>;
+      })
+    );
+  }
+
+  /**
+   * @return List of Films By Name
+   */
+  getAllFilmsByCategory(categories: string, pageNumber: number = 0, pageSize: number = 10): Observable<PageResponse> {
+    return this.getAllFilmsByCategoryResponse(categories, pageNumber, pageSize).pipe(
       map(_r => _r.body)
     );
   }

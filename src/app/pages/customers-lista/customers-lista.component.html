@@ -39,10 +39,14 @@
         <td *ngFor="let col of columns" [innerHTML]="col.renderer ? col.renderer(customer) : customer[col.field]">
         </td>
         <td>
-          <p-button icon="fa fa-search" title="Visualizza Richieste" (onClick)="goToListaRichiesteCustomer(customer.firstName)"></p-button>
+          <p-button title="Visualizza Richieste" (onClick)="goToListaRichiesteCustomer(customer.firstName)">
+            <fa-icon class="m-1" [icon]="faSearch"></fa-icon>
+          </p-button>
         </td>
         <td>
-          <p-button icon="fa fa-cog" title="Opzioni Utente" (onClick)="manageUser(customer)"></p-button>
+          <p-button title="Opzioni Utente" (onClick)="manageUser(customer)">
+            <fa-icon class="m-1" [icon]="faCog"></fa-icon>
+          </p-button>
         </td>
       </tr>
     </ng-template>
@@ -56,7 +60,7 @@
   </p-table>
 </div>
 
-<p-dialog [(visible)]="displayDialog" [closable]="true" [responsive]="true" [modal]="true" [positionTop]="50">
+<p-dialog [(visible)]="displayDialog" [closable]="true" [responsive]="true" [modal]="true" [positionTop]="50" [style]="{width: '45vw'}">
   <p-header>
     Dettaglio Utente
   </p-header>
@@ -210,11 +214,8 @@
 <p-confirmDialog #cd>
   <p-footer>
     <div class="p-dialog-buttonpane p-helper-clearfix">
-      <div class="p-g-3" style="text-align: right">
+      <div style="display: flex; flex-direction: row; justify-content: space-between;">
         <button type="button" pButton icon="pi pi-times" label="No" (click)="cd.reject()"></button>
-      </div>
-      <div class="p-g-6"></div>
-      <div class="p-g-3" style="text-align: left">
         <button type="button" pButton icon="pi pi-check" label="Si" (click)="cd.accept()"></button>
       </div>
     </div>

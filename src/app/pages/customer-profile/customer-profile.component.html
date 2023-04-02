@@ -38,10 +38,14 @@
           {{customer.numeroRichieste}}
         </td>
         <td>
-          <p-button icon="fa fa-search" title="Visualizza Richieste" (onClick)="goToListaRichiesteCustomer(customer.firstName)"></p-button>
+          <p-button title="Visualizza Richieste" (onClick)="goToListaRichiesteCustomer(customer.firstName)">
+            <fa-icon class="m-1" [icon]="faSearch"></fa-icon>
+          </p-button>
         </td>
         <td>
-          <p-button icon="fa fa-star" title="Categorie Preferite" (onClick)="displayCategoryDialog = true"></p-button>
+          <p-button title="Categorie Preferite" (onClick)="displayCategoryDialog = true">
+            <fa-icon class="m-1" [icon]="faStar"></fa-icon>
+          </p-button>
         </td>
       </tr>
     </ng-template>
@@ -85,11 +89,8 @@
 <p-confirmDialog #cd>
   <p-footer>
     <div class="p-dialog-buttonpane p-helper-clearfix">
-      <div class="p-g-3" style="text-align: right">
+      <div style="display: flex; flex-direction: row; justify-content: space-between;">
         <button type="button" pButton icon="pi pi-times" label="No" (click)="cd.reject()"></button>
-      </div>
-      <div class="p-g-6"></div>
-      <div class="p-g-3" style="text-align: left">
         <button type="button" pButton icon="pi pi-check" label="Si" (click)="cd.accept()"></button>
       </div>
     </div>

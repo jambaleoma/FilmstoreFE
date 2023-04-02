@@ -4,23 +4,15 @@
 
 <!-- FILTRI DI RICERCA -->
 <div class="grid" style="padding-left: 5%; padding-right: 5%;">
-  <div class="col-4">
+  <div class="col-4 col-offset-1">
     <div class="label"> Nome SerieTV </div>
     <span class="p-input-icon-left">
       <i class="pi pi-search"></i>
-      <input film-input type="text" pInputText placeholder="Cerca mome" [(ngModel)]="filters.titleSerie"
+      <input film-input type="text" pInputText placeholder="Cerca nome" [(ngModel)]="filters.titleSerie"
         (input)="applyFilter(stvt, $event, 'nome', 'contains')">
     </span>
   </div>
-  <div class="col-4">
-    <div class="label">N° Stagioni SerieTV</div>
-    <span class="p-input-icon-left">
-      <i class="pi pi-search"></i>
-      <input film-input type="text" pInputText placeholder="Cerca Stagione" [(ngModel)]="filters.stagioni"
-        (input)="applyFilter(stvt, $event, 'stagioni.length', 'contains')">
-    </span>
-  </div>
-  <div class="col-4 film-button-third resetButton">
+  <div class="col-2 col-offset-5 film-button-third resetButton">
     <button pButton type="button" label="Reset Filtri" (click)="reset(stvt)"
       style="margin-top: 14px; margin-left: 20%"></button>
   </div>

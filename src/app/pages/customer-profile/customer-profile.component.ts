@@ -6,6 +6,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Customer } from '../../core/_api/models/customer';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
+import { faSearch, faStar } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-customer-profile',
@@ -29,6 +30,10 @@ export class CustomerProfileComponent implements OnInit {
   category: string[] = [];
 
   customerCategory: ListItem[] = [];
+
+  faSearch = faSearch;
+
+  faStar = faStar;
 
   @ViewChild('ct') ct: Table;
 

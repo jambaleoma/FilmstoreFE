@@ -12,18 +12,18 @@
         style="width: 200px;" />
     </div>
 
-    <!-- Login Form -->
+    <!-- Registration Form -->
     <form [formGroup]="registrationForm">
       <div class="grid">
         <div class="col">
           <p-panel header="Anagrafica Utente">
             <div class="field m-3">
               <span class="p-float-label">
-                <input id="firstName" pInputText formControlName="firstname" type="text">
+                <input id="firstName" pInputText formControlName="firstName" type="text">
                 <label for="firstName">Nome</label>
               </span>
               <p-message severity="error" text="Nome Utente Obbligatorio"
-                *ngIf="!registrationForm.controls['firstname'].valid && registrationForm.controls['firstname'].dirty">
+                *ngIf="!registrationForm.controls['firstName'].valid && registrationForm.controls['firstName'].dirty">
               </p-message>
             </div>
             <div class="field m-3">
@@ -107,11 +107,8 @@
 <p-confirmDialog #cd>
   <p-footer>
     <div class="p-dialog-buttonpane p-helper-clearfix">
-      <div class="p-g-3" style="text-align: right">
+      <div style="display: flex; flex-direction: row; justify-content: space-between;">
         <button type="button" pButton icon="pi pi-times" label="No" (click)="cd.reject()"></button>
-      </div>
-      <div class="p-g-6"></div>
-      <div class="p-g-3" style="text-align: left">
         <button type="button" pButton icon="pi pi-check" label="Si" (click)="cd.accept()"></button>
       </div>
     </div>

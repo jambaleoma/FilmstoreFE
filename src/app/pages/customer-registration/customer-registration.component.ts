@@ -1,8 +1,9 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Customer } from 'src/app/core/_api/models';
+import { CustomerService } from 'src/app/core/_api/services/customer.service';
 
 @Component({
   selector: 'app-customer-registration',
@@ -31,7 +32,9 @@ export class CustomerRegistrationComponent implements OnInit {
     private formBuilder: FormBuilder,
     private renderer: Renderer2,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService,
+    private customerService: CustomerService
   ) { }
 
   ngOnInit() {
@@ -39,7 +42,7 @@ export class CustomerRegistrationComponent implements OnInit {
     this.renderer.addClass(document.body, 'backImage');
 
     this.registrationForm = this.formBuilder.group({
-      'firstname': new FormControl('', Validators.required),
+      'firstName': new FormControl('', Validators.required),
       'lastName': new FormControl('', Validators.required),
       'dataDiNascita': new FormControl(Date, Validators.required),
       'sesso': new FormControl('', Validators.required),
@@ -68,31 +71,32 @@ export class CustomerRegistrationComponent implements OnInit {
   saveCustomer() {    
     this.dateToShow = this.registrationForm.get('dataDiNascita').value;
     
-    if (this.customer.password === this.repeatPassword) {
-      // this.confirmationService.confirm({
-      //   message: 'Sicuro di voler registrare l\'utente ' + this.customer.firstName + ' ' + this.customer.lastName + ' ?',
-      //   header: 'Registrazione Utente',
-      //   icon: 'pi pi-exclamation-triangle',
-      //   accept: () => {
-      //     this.customer.label = this.customer.firstName;
-      //     this.customer.value = this.customer.firstName;
-      //     this.customerService.addCustomer(this.customer).subscribe(response => {
-      //       if (response !== null) {
-      //         this.messageService.add({
-      //           key: 'customerRegistrationTost',
-      //           severity: 'success',
-      //           summary: 'Registrazione Completata',
-      //           detail: 'Utente Registrato con Successo'
-      //         });
-      //         setTimeout(() => {
-      //           this.router.navigate(['login']);
-      //         }, 3000);
-      //       }
-      //     });
-      //   },
-      //   reject: () => {
-      //   }
-      // });
+    if (this.registrationForm.get('password').value === this.registrationForm.get('repeatPassword').value) {
+      this.confirmationService.confirm({
+        message: 'Sicuro di voler registrare l\'utente ' + this.registrationForm.get('firstName').value + ' ' + this.registrationForm.get('lastName').value + ' ?',
+        header: 'Registrazione Utente',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          this.customer = this.registrationForm.value;
+          this.customer.label = this.customer.firstName;
+          this.customer.value = this.customer.firstName;
+          this.customerService.addCustomer(this.customer).subscribe(response => {
+            if (response !== null) {
+              this.messageService.add({
+                key: 'customerRegistrationTost',
+                severity: 'success',
+                summary: 'Registrazione Completata',
+                detail: 'Utente Registrato con Successo'
+              });
+              setTimeout(() => {
+                this.router.navigate(['login']);
+              }, 3000);
+            }
+          });
+        },
+        reject: () => {
+        }
+      });
     } else {
       this.messageService.add({
         key: 'customerRegistrationTost',

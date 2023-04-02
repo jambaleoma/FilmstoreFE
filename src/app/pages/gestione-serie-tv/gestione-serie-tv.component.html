@@ -259,13 +259,9 @@
 
 <p-confirmDialog #cd>
   <p-footer>
-    <div class="grid p-dialog-buttonpane p-helper-clearfix">
-      <div class="col-1"></div>
-      <div class="col-3" style="text-align: right">
+    <div class="p-dialog-buttonpane p-helper-clearfix">
+      <div style="display: flex; flex-direction: row; justify-content: space-between;">
         <button type="button" pButton icon="pi pi-times" label="No" (click)="cd.reject()"></button>
-      </div>
-      <div class="col-4"></div>
-      <div class="col-3">
         <button type="button" pButton icon="pi pi-check" label="Si" (click)="cd.accept()"></button>
       </div>
     </div>

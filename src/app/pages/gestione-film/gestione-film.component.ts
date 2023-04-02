@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild, Renderer2 } from '@angular/core';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { faPlus, faTrash, faCheck, faUpload } from '@fortawesome/free-solid-svg-icons';
-import { SelectItem, Message, ConfirmationService, MessageService } from 'primeng/api';
+import { SelectItem, ConfirmationService, MessageService, LazyLoadEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
+import { Observable, debounceTime, distinctUntilChanged, tap, switchMap, catchError, of } from 'rxjs';
 import { Film, ListItem } from 'src/app/core/_api/models';
 import { FilmService } from 'src/app/core/_api/services/film.service';
 import { ApplicationService } from 'src/app/core/_service/application.service';
@@ -13,11 +15,24 @@ import { ApplicationService } from 'src/app/core/_service/application.service';
 })
 export class GestioneFilmComponent implements OnInit {
 
+  public filmSearchFilterForm = this.fb.nonNullable.group({
+    name: [''],
+    format: ['']
+  });
+
+  public filmNameAsyncInput = new FormControl('');
+
+  public filmFormatAsyncInput = new FormControl();
+
   filmSelezionato: Film;
 
   films: Film[];
 
   film: Film = { _id: null };
+
+  filmsByFilter: Film[];
+
+  totalRecordsByFilter = 0;
 
   showFilm = false;
 
@@ -45,9 +60,11 @@ export class GestioneFilmComponent implements OnInit {
 
   postPath: string;
 
-  blockedDocument = false;
+  loading: boolean;
 
-  loadingComplete = false;
+  rows = 10;
+
+  totalRecords = 0;
 
   faPlus = faPlus
   faTresh = faTrash
@@ -61,6 +78,7 @@ export class GestioneFilmComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private filmService: FilmService,
     private renderer: Renderer2,
+    private fb: FormBuilder,
     private messageService: MessageService
   ) {
     this.formats = [
@@ -73,6 +91,8 @@ export class GestioneFilmComponent implements OnInit {
 
     this.formatDialog = this.formats;
     this.formatDialog.shift();
+
+    this.filmNameAsyncInput.setValue('', { emitEvent: false });
   }
 
   ngOnInit() {
@@ -80,6 +100,8 @@ export class GestioneFilmComponent implements OnInit {
     this.subscribeToListOfCategory();
     this.subsrcibeToListOfFilm();
     this.getCols();
+    this.getFilmByName();
+    this.getFilmByFormat();
   }
 
   subscribeToListOfCountry() {
@@ -126,39 +148,139 @@ export class GestioneFilmComponent implements OnInit {
     ];
   }
 
-  subsrcibeToListOfFilm() {
-    this.blockDocument();
-    this.filmService.getFilms().subscribe(notification => {
-      this.films = notification.content;
-      this.unBlockDocument();
-      this.loadingComplete = true;
-      this.showFilm = true;
-      const formati: string[] = [];
-      for (const film of this.films) {
-        if (!formati.find(formato => formato === film.formato)) {
-          formati.push(film.formato);
-        }
+  subsrcibeToListOfFilm(event?: LazyLoadEvent) {
+    let pageNumber = 0;
+    let pageSize = 10;
+    if (this.filmNameAsyncInput.value?.length > 0) {
+      if (event) {
+        pageNumber = event.first === 0 ? 0 : event.first / event.rows;
+        pageSize = event.rows;
+        this.loading = true;
+        this.filmService.getAllFilmsByName(this.filmNameAsyncInput.value, pageNumber, pageSize).subscribe(res => {
+          this.films = res.content;
+          this.totalRecords = res.totalElements;
+          this.loading = false;
+        });
+      } else {
+        this.films = this.filmsByFilter;
+        this.totalRecords = this.totalRecordsByFilter;
       }
-      if (formati) {
-        for (let i = 0; i < formati.length; i++) {
-          const item: SelectItem = { label: formati[i], value: formati[i] };
-          this.formatiFilter.push(item);
-        }
+    } else if (this.filmFormatAsyncInput.value?.length > 0) {
+      if (event) {
+        pageNumber = event.first === 0 ? 0 : event.first / event.rows;
+        pageSize = event.rows;
+        this.loading = true;
+        this.filmService.getAllFilmsByFormat(this.filmFormatAsyncInput.value, pageNumber, pageSize).subscribe(res => {
+          this.films = res.content;
+          this.totalRecords = res.totalElements;
+          this.loading = false;
+        });
+      } else {
+        this.films = this.filmsByFilter;
+        this.totalRecords = this.totalRecordsByFilter;
       }
-    }, error => {
-      this.showFilm = true;
+    } else if (event) {
+      this.loading = true;
+      pageNumber = event.first === 0 ? 0 : event.first / event.rows;
+      pageSize = event.rows;
+      this.filmService.getFilms(pageNumber, pageSize).subscribe(res => {
+        this.films = res.content;
+        this.totalRecords = res.totalElements;
+        this.loading = false;
+      });
+    } else {
+      this.filmService.getFilms(0, 10).subscribe(res => {
+        this.films = res.content;
+        this.totalRecords = res.totalElements;
+        this.loading = false;
+      });
     }
-    );
   }
 
-  blockDocument() {
-    this.blockedDocument = true;
+  getFilmByName(): Observable<Film[]> | any {
+    this.filmNameAsyncInput.valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+        tap(_ => {
+          this.loading = true;
+          return true;
+        }),
+        switchMap(
+          text => {
+            if (text) {
+              return this.filmService.getAllFilmsByName(text)
+              .pipe(
+                catchError(err => {
+                  this.messageService.add({
+                    key: 'filmListTost',
+                    severity: 'error', summary: 'Errore', detail: err.error.message
+                  });
+                  this.loading = false;  
+                  return of(null);
+                })  
+              );  
+            } else {
+              return of(null);
+            }
+          }
+        ),
+      )
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this.filmsByFilter = res.content;
+            this.totalRecordsByFilter = res.totalElements;
+          }
+          this.loading = false;
+          this.subsrcibeToListOfFilm(null);
+          return res;
+        },
+        error: (err) => console.log(err)
+      });
   }
 
-  unBlockDocument() {
-    this.blockedDocument = false;
+  getFilmByFormat(): Observable<Film[]> | any {
+    this.filmFormatAsyncInput.valueChanges
+      .pipe(
+        distinctUntilChanged(),
+        tap(_ => {
+          this.loading = true;
+          return true;
+        }),
+        switchMap(
+          format => {
+            if (format) {
+              return this.filmService.getAllFilmsByFormat(format)
+                .pipe(
+                  catchError(err => {
+                    this.messageService.add({
+                      key: 'filmListTost',
+                      severity: 'error', summary: 'Errore', detail: err.error.message
+                    });
+                    this.loading = false;  
+                    return of(null);
+                  })  
+                )
+            } else {
+              return of(null);
+            }
+          }
+        ),
+      )
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this.filmsByFilter = res.content;
+            this.totalRecordsByFilter = res.totalElements;
+          }
+          this.loading = false;
+          this.subsrcibeToListOfFilm(null);
+          return res;
+        },
+        error: (err) => console.log(err)
+      });
   }
-
 
   onRowSelect(event) {
     this.newFilm = false;
@@ -312,10 +434,11 @@ export class GestioneFilmComponent implements OnInit {
     }, 250);
   }
 
-  reset(rt: Table) {
-    rt.reset();
-    this.filters = {};
-    this.yearFilter = null;
+  resetFilterForm() {
+    this.filmSearchFilterForm.reset();
+    this.filmNameAsyncInput.reset();
+    this.filmFormatAsyncInput.reset();
+    this.subsrcibeToListOfFilm(null);
   }
 
   splitDataFormat(dataCreazione: string) {
