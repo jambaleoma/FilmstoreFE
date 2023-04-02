@@ -22,7 +22,7 @@
     </div>
     <div class="col-3 col-offset-1">
       <div class="label">Formato Film </div>
-      <p-dropdown [options]="formats" placeholder="Cerca Formato" [showClear]="true" formControlName="format" [formControl]="filmFormatAsyncInput"></p-dropdown>
+      <p-dropdown [options]="formats" placeholder="Cerca Formato" ngDefaultControl [showClear]="true" formControlName="format" [formControl]="filmFormatAsyncInput"></p-dropdown>
     </div>
     <div film-button-third class="col-3 col-offset-1 resetButton" style="padding-right: 5%;">
       <button pButton type="button" label="Reset Filtri" (click)="resetFilterForm()" style="margin-top: 14px;"></button>
