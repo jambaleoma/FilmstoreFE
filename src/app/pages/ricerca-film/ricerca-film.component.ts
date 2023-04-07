@@ -98,6 +98,7 @@ export class RicercaFilmComponent implements OnInit {
     this.getFilmByName();
     this.getFilmByFormat();
     this.getFilmByCategory();
+    this.getFilmByYear();
   }
 
   getColumns() {
@@ -156,6 +157,20 @@ export class RicercaFilmComponent implements OnInit {
         pageSize = event.rows;
         this.loading = true;
         this.filmService.getAllFilmsByCategory(this.filmCategoryAsyncInput.value, pageNumber, pageSize).subscribe(res => {
+          this.films = res.content;
+          this.totalRecords = res.totalElements;
+          this.loading = false;
+        });
+      } else {
+        this.films = this.filmsByFilter;
+        this.totalRecords = this.totalRecordsByFilter;
+      }
+    } else if (this.filmYearAsyncInput.value > 0) {
+      if (event) {
+        pageNumber = event.first === 0 ? 0 : event.first / event.rows;
+        pageSize = event.rows;
+        this.loading = true;
+        this.filmService.getAllFilmsByYear(this.filmYearAsyncInput.value, pageNumber, pageSize).subscribe(res => {
           this.films = res.content;
           this.totalRecords = res.totalElements;
           this.loading = false;
@@ -289,6 +304,49 @@ export class RicercaFilmComponent implements OnInit {
                     return of(null);
                   })  
                 )
+            } else {
+              return of(null);
+            }
+          }
+        ),
+      )
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this.filmsByFilter = res.content;
+            this.totalRecordsByFilter = res.totalElements;
+          }
+          this.loading = false;
+          this.loadFilms(null);
+          return res;
+        },
+        error: (err) => console.log(err)
+      });
+  }
+
+  getFilmByYear(): Observable<Film[]> | any {
+    this.filmYearAsyncInput.valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+        tap(_ => {
+          this.loading = true;
+          return true;
+        }),
+        switchMap(
+          year => {
+            if (year) {
+              return this.filmService.getAllFilmsByYear(year)
+              .pipe(
+                catchError(err => {
+                  this.messageService.add({
+                    key: 'filmListTost',
+                    severity: 'error', summary: 'Errore', detail: err.error.message
+                  });
+                  this.loading = false;  
+                  return of(null);
+                })  
+              );  
             } else {
               return of(null);
             }

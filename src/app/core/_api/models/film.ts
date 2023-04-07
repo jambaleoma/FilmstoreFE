@@ -11,3 +11,10 @@ export interface Film {
     locandina?: string;
     dataCreazione?: string;
 }
+
+export interface FilteredFilmBodyRequest {
+    categorieFilm: string[];
+    formatoFilm: string;
+    annoFilm: number;
+    nomeFilm: string;
+}

@@ -4,7 +4,7 @@ import { HttpClient, HttpRequest, HttpResponse, HttpHeaders, HttpParams } from '
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 
-import { Film } from '../models/film';
+import { Film, FilteredFilmBodyRequest } from '../models/film';
 import { Observable, filter, map } from 'rxjs';
 import { PageResponse } from '../models/pageResponse';
 
@@ -120,7 +120,7 @@ export class FilmService extends BaseService {
   }
 
   /**
-   * @return List of Films By Name
+   * @return List of Films By Format
    */
   getAllFilmsByFormat(format: string, pageNumber: number = 0, pageSize: number = 10): Observable<PageResponse> {
     return this.getAllFilmsByFormatResponse(format, pageNumber, pageSize).pipe(
@@ -157,10 +157,84 @@ export class FilmService extends BaseService {
   }
 
   /**
-   * @return List of Films By Name
+   * @return List of Films By Categories
    */
   getAllFilmsByCategory(categories: string, pageNumber: number = 0, pageSize: number = 10): Observable<PageResponse> {
     return this.getAllFilmsByCategoryResponse(categories, pageNumber, pageSize).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * @return List of Films By Year
+   */
+  private getAllFilmsByYearResponse(year: number, pageNumber: number = 0, pageSize: number = 10): Observable<HttpResponse<PageResponse>> {
+    let queryParams = new HttpParams().append("pageNumber", pageNumber).append("pageSize", pageSize).append("sortBy", "id").append("sortDirection", "DESC");
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `rest/films/byYear/` + year,
+      __body,
+      {
+        headers: __headers,
+        params: queryParams,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: PageResponse = null;
+        _body = _resp.body as PageResponse;
+        return _resp.clone({ body: _body }) as HttpResponse<PageResponse>;
+      })
+    );
+  }
+
+  /**
+   * @return List of Films By Year
+   */
+  getAllFilmsByYear(year: number, pageNumber: number = 0, pageSize: number = 10): Observable<PageResponse> {
+    return this.getAllFilmsByYearResponse(year, pageNumber, pageSize).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * @return List of Filtered Films
+   */
+  private getAllFilteredFilmsResponse(body: FilteredFilmBodyRequest, pageNumber: number = 0, pageSize: number = 10): Observable<HttpResponse<PageResponse>> {
+    let queryParams = new HttpParams().append("pageNumber", pageNumber).append("pageSize", pageSize).append("sortBy", "id").append("sortDirection", "DESC");
+    let __headers = new HttpHeaders();
+    let __body: any = body;
+    let req = new HttpRequest<any>(
+      "POST",
+      this.rootUrl + `rest/films/allFilteredFilms`,
+      __body,
+      {
+        headers: __headers,
+        params: queryParams,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: PageResponse = null;
+        _body = _resp.body as PageResponse;
+        return _resp.clone({ body: _body }) as HttpResponse<PageResponse>;
+      })
+    );
+  }
+
+  /**
+   * @return List of Filtered Films
+   */
+  getAllFilteredFilms(body: FilteredFilmBodyRequest, pageNumber: number = 0, pageSize: number = 10): Observable<PageResponse> {
+    return this.getAllFilteredFilmsResponse(body, pageNumber, pageSize).pipe(
       map(_r => _r.body)
     );
   }
